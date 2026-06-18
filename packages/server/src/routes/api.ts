@@ -10,7 +10,6 @@ import { MONSTERS } from '../data/monsters';
 
 export const apiRouter = Router();
 
-// === Health ===
 apiRouter.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
@@ -22,7 +21,6 @@ apiRouter.get('/health', (_req, res) => {
   });
 });
 
-// === Player ===
 apiRouter.post('/player/create', (req, res) => {
   const { name, class: playerClass } = req.body;
   if (!name || !playerClass) {
@@ -55,7 +53,6 @@ apiRouter.get('/player/:id/quests', (req, res) => {
   res.json({ active, available });
 });
 
-// === Zones ===
 apiRouter.get('/zones', (_req, res) => {
   res.json({ zones: Object.values(ZONES) });
 });
@@ -66,7 +63,6 @@ apiRouter.get('/zones/:id', (req, res) => {
   res.json({ zone });
 });
 
-// === Items (game data) ===
 apiRouter.get('/items', (_req, res) => {
   res.json({ items: Object.values(ITEMS) });
 });
@@ -77,29 +73,24 @@ apiRouter.get('/items/:id', (req, res) => {
   res.json({ item });
 });
 
-// === Monsters (game data) ===
 apiRouter.get('/monsters', (_req, res) => {
   res.json({ monsters: Object.values(MONSTERS) });
 });
 
-// === Quests (game data) ===
 apiRouter.get('/quests', (_req, res) => {
   res.json({ quests: Object.values(QUESTS) });
 });
 
-// === Market ===
 apiRouter.get('/market', (_req, res) => {
   res.json({ listings: getListings() });
 });
 
-// === Chronicle ===
 apiRouter.get('/chronicle', (req, res) => {
   const limit = parseInt(req.query.limit as string) || 50;
   const entries = db.chronicle.slice(-limit).reverse();
   res.json({ entries });
 });
 
-// === Leaderboard ===
 apiRouter.get('/leaderboard', (_req, res) => {
   const players = Array.from(db.players.values())
     .sort((a, b) => b.level - a.level || b.exp - a.exp)
@@ -111,7 +102,6 @@ apiRouter.get('/leaderboard', (_req, res) => {
   res.json({ leaderboard: players });
 });
 
-// === Online players ===
 apiRouter.get('/online', (_req, res) => {
   const online = Array.from(db.playerToSocket.keys())
     .map(id => db.getPlayer(id))

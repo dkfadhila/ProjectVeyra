@@ -64,12 +64,11 @@ RULES:
 
       const response = completion.choices[0]?.message?.content || '...';
       
-      // Calculate resonance change based on interaction quality
-      let resonanceChange = 1; // base for any conversation
+      let resonanceChange = 1;
       const lowerMsg = message.toLowerCase();
       if (lowerMsg.includes('gift') || lowerMsg.includes('for you')) resonanceChange += 2;
       if (lowerMsg.includes('story') || lowerMsg.includes('adventure')) resonanceChange += 1;
-      if (lowerMsg.length > 50) resonanceChange += 1; // longer messages = more engagement
+      if (lowerMsg.length > 50) resonanceChange += 1;
 
       const context = `Player said: "${message.substring(0, 100)}" | Resonance: +${resonanceChange}`;
 

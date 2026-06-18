@@ -99,8 +99,7 @@ export async function talkToLyra(playerId: string, message: string): Promise<{ r
     response = getFallbackResponse(player, memory);
   }
 
-  // Calculate resonance change
-  let resonanceChange = 1; // Base for talking
+  let resonanceChange = 1;
   const lowerMsg = message.toLowerCase();
   if (lowerMsg.includes('love') || lowerMsg.includes('beautiful') || lowerMsg.includes('amazing')) {
     resonanceChange = 3;
@@ -110,12 +109,10 @@ export async function talkToLyra(playerId: string, message: string): Promise<{ r
     resonanceChange = -2;
   }
 
-  // Apply resonance change
   player.resonance = Math.max(0, Math.min(100, player.resonance + resonanceChange));
   player.resonanceLevel = getResonanceLevel(player.resonance);
   db.savePlayer(player);
 
-  // Update memory
   const entry: ConversationEntry = {
     timestamp: Date.now(),
     playerMessage: message,
@@ -140,7 +137,6 @@ export async function talkToLyra(playerId: string, message: string): Promise<{ r
     });
   }
 
-  // Check quest progress for talking to Lyra
   updateQuestProgress(playerId, 'talk', 'lyra');
 
   return { response, resonanceChange, newResonance: player.resonance };
@@ -156,7 +152,6 @@ export function giveGiftToLyra(playerId: string, itemId: string): { success: boo
   const item = invItem.item;
   const memory = db.getLyraMemory(playerId);
 
-  // Determine resonance change based on item
   let resonanceChange = 5;
   let reaction = '';
 
@@ -164,7 +159,6 @@ export function giveGiftToLyra(playerId: string, itemId: string): { success: boo
     resonanceChange = item.effect.value;
   }
 
-  // Personalized reactions
   const reactions: Record<string, string> = {
     blue_flower: 'Oh! A Blue Flower... they remind me of the old days. Thank you, dear one.',
     pearl_necklace: 'A Pearl Necklace?! This is exquisite... I will treasure it always.',
@@ -176,7 +170,6 @@ export function giveGiftToLyra(playerId: string, itemId: string): { success: boo
 
   reaction = reactions[itemId] || `A ${item.name}? Thank you for thinking of me.`;
 
-  // Apply
   removeItemFromInventory(player, itemId, 1);
 
   player.resonance = Math.max(0, Math.min(100, player.resonance + resonanceChange));

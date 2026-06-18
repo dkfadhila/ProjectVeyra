@@ -19,11 +19,9 @@ export default function GameCanvas({ player, monsters, onMonsterClick }: Props) 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Clear
     ctx.fillStyle = "#0a0e1a";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Grid
     ctx.strokeStyle = "rgba(124, 58, 237, 0.08)";
     ctx.lineWidth = 1;
     for (let x = 0; x < canvas.width; x += 40) {
@@ -33,30 +31,25 @@ export default function GameCanvas({ player, monsters, onMonsterClick }: Props) 
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
     }
 
-    // Zone label
     ctx.fillStyle = "rgba(124, 58, 237, 0.15)";
     ctx.font = "bold 48px sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(player.zone === "lunaris_village" ? "Lunaris Village" : "Azure Coast", canvas.width / 2, 60);
 
-    // Draw monsters
     for (const m of monsters) {
       const mx = m.position.x;
       const my = m.position.y;
 
-      // Monster circle
       ctx.fillStyle = m.monster.level > player.level ? "#ef4444" : "#f59e0b";
       ctx.beginPath();
       ctx.arc(mx, my, 18, 0, Math.PI * 2);
       ctx.fill();
 
-      // Monster name
       ctx.fillStyle = "#fff";
       ctx.font = "10px sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(m.monster.name, mx, my - 24);
 
-      // HP bar
       const hpPct = m.currentHp / m.monster.maxHp;
       ctx.fillStyle = "#333";
       ctx.fillRect(mx - 15, my + 22, 30, 4);
@@ -64,11 +57,9 @@ export default function GameCanvas({ player, monsters, onMonsterClick }: Props) 
       ctx.fillRect(mx - 15, my + 22, 30 * hpPct, 4);
     }
 
-    // Draw player
     const px = playerPos.current.x;
     const py = playerPos.current.y;
 
-    // Player glow
     const gradient = ctx.createRadialGradient(px, py, 0, px, py, 30);
     gradient.addColorStop(0, "rgba(124, 58, 237, 0.3)");
     gradient.addColorStop(1, "rgba(124, 58, 237, 0)");
@@ -77,13 +68,11 @@ export default function GameCanvas({ player, monsters, onMonsterClick }: Props) 
     ctx.arc(px, py, 30, 0, Math.PI * 2);
     ctx.fill();
 
-    // Player body
     ctx.fillStyle = "#7c3aed";
     ctx.beginPath();
     ctx.arc(px, py, 14, 0, Math.PI * 2);
     ctx.fill();
 
-    // Player name
     ctx.fillStyle = "#fff";
     ctx.font = "bold 12px sans-serif";
     ctx.textAlign = "center";
@@ -111,17 +100,15 @@ export default function GameCanvas({ player, monsters, onMonsterClick }: Props) 
     const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
     const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
 
-    // Check monster click
     for (const m of monsters) {
       const dx = x - m.position.x;
       const dy = y - m.position.y;
-      if (dx * dx + dy * dy < 400) { // 20px radius
+      if (dx * dx + dy * dy < 400) {
         onMonsterClick(m);
         return;
       }
     }
 
-    // Move player
     playerPos.current = { x, y };
   };
 

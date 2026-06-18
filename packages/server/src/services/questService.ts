@@ -7,11 +7,9 @@ import { addExp, addItemToInventory } from './playerService';
 export function getAvailableQuests(player: Player): Quest[] {
   const available: Quest[] = [];
   for (const quest of Object.values(QUESTS)) {
-    // Skip already active or completed
     const existing = getPlayerQuestStatus(player.id, quest.id);
     if (existing && (existing.status === 'active' || existing.status === 'completed')) continue;
 
-    // Check prerequisite
     if (quest.prerequisite && !player.completedQuests.includes(quest.prerequisite)) continue;
 
     available.push(quest);
@@ -26,17 +24,14 @@ export function acceptQuest(playerId: string, questId: string): { success: boole
   const quest = QUESTS[questId];
   if (!quest) return { success: false, message: 'Quest not found.' };
 
-  // Check prerequisite
   if (quest.prerequisite && !player.completedQuests.includes(quest.prerequisite)) {
     return { success: false, message: 'Prerequisite quest not completed.' };
   }
 
-  // Check if already active or completed
   const existing = getPlayerQuestStatus(playerId, questId);
   if (existing && existing.status === 'active') return { success: false, message: 'Quest already active.' };
   if (existing && existing.status === 'completed') return { success: false, message: 'Quest already completed.' };
 
-  // Deep copy objectives so progress is independent
   const questCopy: Quest = {
     ...quest,
     objectives: quest.objectives.map(o => ({ ...o, current: 0 })),
@@ -85,11 +80,9 @@ export function completeQuest(playerId: string, questId: string): { success: boo
   const pq = quests.get(questId);
   if (!pq || pq.status !== 'active') return { success: false, message: 'Quest not active.' };
 
-  // Check all objectives complete
   const allDone = pq.quest.objectives.every(o => o.current >= o.required);
   if (!allDone) return { success: false, message: 'Not all objectives completed.' };
 
-  // Give rewards
   const rewards = pq.quest.rewards;
   player.gold += rewards.gold;
   player.vs += rewards.vs;
@@ -107,7 +100,6 @@ export function completeQuest(playerId: string, questId: string): { success: boo
   player.activeQuests = player.activeQuests.filter(q => q.id !== questId);
   db.savePlayer(player);
 
-  // Chronicle
   db.addChronicleEntry({
     id: uuid(),
     playerId,

@@ -1,8 +1,4 @@
-// ============================================================================
-// PROJECT VEYRA — Shared Types & Constants
-// ============================================================================
 
-// --- Player ---
 
 export interface Player {
   id: string;
@@ -18,15 +14,15 @@ export interface Player {
   defense: number;
   speed: number;
   gold: number;
-  vs: number;       // Veyra Shards (earned in-game)
-  veyA: number;     // VEYA token (converted from VS, on-chain)
+  vs: number;
+  veyA: number;
   position: Position;
   zone: string;
   inventory: InventoryItem[];
   equippedItems: EquippedItems;
   activeQuests: Quest[];
   completedQuests: string[];
-  resonance: number;        // 0-100, relationship with Lyra
+  resonance: number;
   resonanceLevel: ResonanceLevel;
   soulbond: boolean;
   createdAt: number;
@@ -46,8 +42,6 @@ export interface EquippedItems {
   accessory: InventoryItem | null;
 }
 
-// --- Items ---
-
 export interface Item {
   id: string;
   name: string;
@@ -56,7 +50,7 @@ export interface Item {
   rarity: Rarity;
   stats?: ItemStats;
   effect?: ItemEffect;
-  value: number;      // gold value
+  value: number;
   stackable: boolean;
   maxStack: number;
 }
@@ -83,8 +77,6 @@ export interface InventoryItem {
   quantity: number;
 }
 
-// --- Monsters ---
-
 export interface Monster {
   id: string;
   name: string;
@@ -104,7 +96,7 @@ export interface Monster {
 
 export interface DropEntry {
   itemId: string;
-  chance: number;    // 0-1
+  chance: number;
   minQty: number;
   maxQty: number;
 }
@@ -116,8 +108,6 @@ export interface MonsterInstance {
   position: Position;
   respawnAt?: number;
 }
-
-// --- Combat ---
 
 export interface CombatState {
   id: string;
@@ -149,8 +139,6 @@ export interface CombatResult {
   levelUp: boolean;
   newLevel?: number;
 }
-
-// --- Quests ---
 
 export interface Quest {
   id: string;
@@ -197,8 +185,6 @@ export interface PlayerQuest {
   completedAt?: number;
 }
 
-// --- Lyra AI NPC ---
-
 export interface LyraMemory {
   playerId: string;
   conversations: ConversationEntry[];
@@ -206,8 +192,8 @@ export interface LyraMemory {
   resonanceEvents: ResonanceEvent[];
   lastInteraction: number;
   totalInteractions: number;
-  playerNotes: string;   // Lyra's notes about this player
-  ogStorageHash?: string; // 0G Storage hash for persistence
+  playerNotes: string;
+  ogStorageHash?: string;
 }
 
 export interface ConversationEntry {
@@ -252,8 +238,6 @@ export function getResonanceLevel(resonance: number): ResonanceLevel {
   return 'stranger';
 }
 
-// --- Marketplace ---
-
 export interface MarketListing {
   id: string;
   sellerId: string;
@@ -280,20 +264,18 @@ export interface MarketTransaction {
   timestamp: number;
 }
 
-export const MARKET_TAX_RATE = 0.05;  // 5% tax
-export const SOULBOND_TAX_RATE = 0.02; // 2% tax for soulbonded players
-export const VS_TO_VEYA_RATE = 100;    // 100 VS = 1 VEYA
-
-// --- Zones & World ---
+export const MARKET_TAX_RATE = 0.05;
+export const SOULBOND_TAX_RATE = 0.02;
+export const VS_TO_VEYA_RATE = 100;
 
 export interface Zone {
   id: string;
   name: string;
   description: string;
   biome: Biome;
-  level: [number, number];  // [min, max]
-  monsters: string[];       // monster IDs
-  npcs: string[];           // NPC IDs
+  level: [number, number];
+  monsters: string[];
+  npcs: string[];
   exits: ZoneExit[];
   spawnPoint: Position;
   bounds: { x: number; y: number; width: number; height: number };
@@ -306,8 +288,6 @@ export interface ZoneExit {
   position: Position;
   size: { width: number; height: number };
 }
-
-// --- World Chronicle (0G Storage) ---
 
 export interface ChronicleEntry {
   id: string;
@@ -331,8 +311,6 @@ export type ChronicleEventType =
   | 'boss_kill'
   | 'first_clear'
   | 'world_event';
-
-// --- Socket Events ---
 
 export interface ServerToClientEvents {
   'player:moved': (data: { playerId: string; position: Position; zone: string }) => void;
@@ -369,8 +347,6 @@ export interface ClientToServerEvents {
   'exchange:vsToVeya': (data: { amount: number }) => void;
 }
 
-// --- Game Data Constants ---
-
 export const CLASS_BASE_STATS: Record<PlayerClass, Omit<Player, 'id' | 'name' | 'class' | 'position' | 'zone' | 'inventory' | 'equippedItems' | 'activeQuests' | 'completedQuests' | 'createdAt' | 'lastActive' | 'soulbond' | 'resonance' | 'resonanceLevel'>> = {
   knight:  { level: 1, exp: 0, hp: 120, maxHp: 120, mp: 30, maxMp: 30, attack: 15, defense: 12, speed: 8,  gold: 100, vs: 0, veyA: 0 },
   mage:    { level: 1, exp: 0, hp: 70,  maxHp: 70,  mp: 100, maxMp: 100, attack: 8,  defense: 5,  speed: 10, gold: 80,  vs: 0, veyA: 0 },
@@ -390,4 +366,4 @@ export function getExpForLevel(level: number): number {
 }
 
 export const MAX_LEVEL = 50;
-export const RESOULDBOND_COST = 1000; // VS cost to initiate Soulbond
+export const RESOULDBOND_COST = 1000;

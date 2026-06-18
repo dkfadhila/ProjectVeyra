@@ -19,7 +19,6 @@ export function registerSocketHandlers(io: GameServer) {
   io.on('connection', (socket: GameSocket) => {
     console.log(`[Socket] Connected: ${socket.id}`);
 
-    // === PLAYER AUTH / JOIN ===
     socket.on('player:join', (data: { playerId: string }) => {
       const player = db.getPlayer(data.playerId);
       if (!player) {
@@ -29,25 +28,20 @@ export function registerSocketHandlers(io: GameServer) {
       db.socketToPlayer.set(socket.id, player.id);
       db.playerToSocket.set(player.id, socket.id);
 
-      // Join zone room
       socket.join(player.zone);
 
-      // Send current state
       socket.emit('player:state', player as any);
 
-      // Send monsters in zone
       const monsters = getMonstersInZone(player.zone);
       for (const m of monsters) {
         socket.emit('monster:spawned', m);
       }
 
-      // Send active quests
       const quests = getActiveQuests(player.id);
       for (const q of quests) {
         socket.emit('quest:updated', q);
       }
 
-      // Notify zone
       socket.to(player.zone).emit('notification', {
         type: 'info',
         message: `${player.name} has entered the zone.`,
@@ -56,7 +50,6 @@ export function registerSocketHandlers(io: GameServer) {
       console.log(`[Player] ${player.name} (${player.id}) joined zone: ${player.zone}`);
     });
 
-    // === MOVEMENT ===
     socket.on('player:move', (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -73,7 +66,6 @@ export function registerSocketHandlers(io: GameServer) {
       });
     });
 
-    // === ZONE TRANSITION ===
     socket.on('player:changeZone', (data: { zoneId: string }) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -86,7 +78,6 @@ export function registerSocketHandlers(io: GameServer) {
         return;
       }
 
-      // Check if zone is accessible from current
       const currentZone = ZONES[player.zone];
       if (!currentZone?.exits.some(e => e.toZone === data.zoneId)) {
         socket.emit('notification', { type: 'error', message: 'Cannot travel there from here.' });
@@ -99,7 +90,6 @@ export function registerSocketHandlers(io: GameServer) {
       db.savePlayer(player);
       socket.join(data.zoneId);
 
-      // Spawn monsters if needed
       const existing = getMonstersInZone(data.zoneId);
       if (existing.length === 0 && zone.monsters.length > 0) {
         const spawned = spawnMonsters(data.zoneId);
@@ -116,12 +106,10 @@ export function registerSocketHandlers(io: GameServer) {
       });
     });
 
-    // === COMBAT ===
     socket.on('player:attack', (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
 
-      // Check if already in combat
       let activeCombat = null;
       for (const cs of db.combatStates.values()) {
         if (cs.playerId === playerId && cs.status === 'active') {
@@ -131,7 +119,6 @@ export function registerSocketHandlers(io: GameServer) {
       }
 
       if (!activeCombat) {
-        // Start new combat
         activeCombat = startCombat(playerId, data.monsterInstanceId);
         if (!activeCombat) {
           socket.emit('notification', { type: 'error', message: 'Cannot attack that target.' });
@@ -141,7 +128,6 @@ export function registerSocketHandlers(io: GameServer) {
 
       socket.emit('combat:update', activeCombat);
 
-      // Process attack
       const result = playerAttack(activeCombat.id);
       if (!result) {
         socket.emit('notification', { type: 'error', message: 'Not your turn.' });
@@ -153,13 +139,11 @@ export function registerSocketHandlers(io: GameServer) {
       if (result.result) {
         socket.emit('combat:result', result.result);
 
-        // Update quest progress
         const monster = db.monsterInstances.get(result.combat.monsterInstanceId)?.monster;
         if (monster) {
           const updated = updateQuestProgress(playerId, 'kill', monster.id);
           if (updated) socket.emit('quest:updated', updated);
 
-          // Chronicle
           db.addChronicleEntry({
             id: require('uuid').v4(),
             playerId,
@@ -178,10 +162,8 @@ export function registerSocketHandlers(io: GameServer) {
           });
         }
 
-        // Clean up combat
         db.combatStates.delete(result.combat.id);
 
-        // Notify zone of monster death
         io.to(db.getPlayer(playerId)?.zone || '').emit('monster:died', {
           instanceId: result.combat.monsterInstanceId,
           killerId: playerId,
@@ -216,7 +198,6 @@ export function registerSocketHandlers(io: GameServer) {
       }
     });
 
-    // === ITEMS ===
     socket.on('player:useItem', (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -251,7 +232,6 @@ export function registerSocketHandlers(io: GameServer) {
       }
     });
 
-    // === QUESTS ===
     socket.on('quest:accept', (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -291,7 +271,6 @@ export function registerSocketHandlers(io: GameServer) {
       }
     });
 
-    // === LYRA AI NPC ===
     socket.on('lyra:talk', async (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -330,7 +309,6 @@ export function registerSocketHandlers(io: GameServer) {
       if (player) socket.emit('player:state', player as any);
     });
 
-    // === MARKETPLACE ===
     socket.on('market:list', (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -385,7 +363,6 @@ export function registerSocketHandlers(io: GameServer) {
       socket.emit('market:update', listings);
     });
 
-    // === EXCHANGE ===
     socket.on('exchange:vsToVeya', (data) => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (!playerId) return;
@@ -402,7 +379,6 @@ export function registerSocketHandlers(io: GameServer) {
       }
     });
 
-    // === DISCONNECT ===
     socket.on('disconnect', () => {
       const playerId = db.socketToPlayer.get(socket.id);
       if (playerId) {

@@ -14,7 +14,6 @@ export function createPlayer(name: string, playerClass: PlayerClass): Player {
     gold: 100, vs: 0, veyA: 0,
   };
 
-  // Apply class-specific base stats
   const classStats: Record<PlayerClass, typeof base> = {
     knight: { level: 1, exp: 0, hp: 120, maxHp: 120, mp: 30, maxMp: 30, attack: 15, defense: 12, speed: 8, gold: 100, vs: 0, veyA: 0 },
     mage:   { level: 1, exp: 0, hp: 70,  maxHp: 70,  mp: 100, maxMp: 100, attack: 8, defense: 5, speed: 10, gold: 80, vs: 0, veyA: 0 },
@@ -45,7 +44,6 @@ export function createPlayer(name: string, playerClass: PlayerClass): Player {
 
   db.savePlayer(player);
 
-  // Log chronicle
   db.addChronicleEntry({
     id: uuid(),
     playerId: player.id,
@@ -146,10 +144,8 @@ export function equipItem(player: Player, itemId: string, slot: 'weapon' | 'armo
   const validSlot = invItem.item.type === slot || (slot === 'accessory' && invItem.item.type === 'accessory');
   if (!validSlot) return { success: false, message: `Cannot equip ${invItem.item.name} in ${slot} slot.` };
 
-  // Unequip current
   const current = player.equippedItems[slot];
   if (current) {
-    // Add back stats (reverse)
     if (current.item.stats) {
       if (current.item.stats.attack) player.attack -= current.item.stats.attack;
       if (current.item.stats.defense) player.defense -= current.item.stats.defense;
@@ -160,11 +156,9 @@ export function equipItem(player: Player, itemId: string, slot: 'weapon' | 'armo
     addItemToInventory(player, current.item.id, 1);
   }
 
-  // Equip new
   player.equippedItems[slot] = { item: invItem.item, quantity: 1 };
   removeItemFromInventory(player, itemId, 1);
 
-  // Apply stats
   if (invItem.item.stats) {
     if (invItem.item.stats.attack) player.attack += invItem.item.stats.attack;
     if (invItem.item.stats.defense) player.defense += invItem.item.stats.defense;

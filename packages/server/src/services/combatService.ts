@@ -15,7 +15,6 @@ export function spawnMonsters(zone: string): MonsterInstance[] {
   const zoneMonsters = Object.values(monsterDefs).filter(m => m.zone === zone);
 
   for (const monsterDef of zoneMonsters) {
-    // Spawn 2-3 of each type
     const count = 2 + Math.floor(Math.random() * 2);
     for (let i = 0; i < count; i++) {
       const inst: MonsterInstance = {
@@ -45,7 +44,6 @@ export function startCombat(playerId: string, monsterInstanceId: string): Combat
   const monsterInst = db.monsterInstances.get(monsterInstanceId);
   if (!player || !monsterInst || monsterInst.currentHp <= 0) return null;
 
-  // Check if player already in combat
   for (const cs of db.combatStates.values()) {
     if (cs.playerId === playerId && cs.status === 'active') return null;
   }
@@ -76,7 +74,6 @@ export function playerAttack(combatId: string): { combat: CombatState; result?: 
 
   const turn = combat.log.length + 1;
 
-  // Player attacks
   const rawDmg = Math.max(1, player.attack - Math.floor(monsterInst.monster.defense * 0.5));
   const variance = 0.8 + Math.random() * 0.4;
   const damage = Math.floor(rawDmg * variance);
@@ -92,7 +89,6 @@ export function playerAttack(combatId: string): { combat: CombatState; result?: 
   });
 
   if (combat.monsterHp <= 0) {
-    // Player wins
     combat.status = 'player_won';
     monsterInst.currentHp = 0;
     monsterInst.respawnAt = Date.now() + MONSTER_RESPAWN_MS;
@@ -102,7 +98,6 @@ export function playerAttack(combatId: string): { combat: CombatState; result?: 
     return { combat, result };
   }
 
-  // Monster attacks back
   const mRawDmg = Math.max(1, monsterInst.monster.attack - Math.floor(player.defense * 0.5));
   const mVariance = 0.8 + Math.random() * 0.4;
   const mDamage = Math.floor(mRawDmg * mVariance);
@@ -122,7 +117,6 @@ export function playerAttack(combatId: string): { combat: CombatState; result?: 
 
   if (combat.playerHp <= 0) {
     combat.status = 'monster_won';
-    // Restore player to 1 HP at village
     player.hp = 1;
     player.position = { x: 50, y: 50 };
     player.zone = 'lunaris_village';
@@ -156,7 +150,6 @@ export function playerFlee(combatId: string): CombatState | null {
       message: 'Failed to flee!',
       timestamp: Date.now(),
     });
-    // Monster gets a free hit
     const monsterInst = db.monsterInstances.get(combat.monsterInstanceId);
     const player = db.getPlayer(combat.playerId);
     if (monsterInst && player) {
@@ -192,7 +185,6 @@ function resolveCombatVictory(player: Player, monster: Monster, combat: CombatSt
   const goldGained = monster.gold;
   const itemsGained: InventoryItem[] = [];
 
-  // Roll drops
   for (const drop of monster.drops) {
     if (Math.random() < drop.chance) {
       const qty = drop.minQty + Math.floor(Math.random() * (drop.maxQty - drop.minQty + 1));
@@ -219,7 +211,6 @@ function resolveCombatVictory(player: Player, monster: Monster, combat: CombatSt
   };
 }
 
-// Respawn monsters periodically
 export function tickMonsterRespawns(): void {
   const now = Date.now();
   for (const [id, inst] of db.monsterInstances) {

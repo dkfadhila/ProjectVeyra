@@ -29,7 +29,6 @@ export class CombatEngine {
     const monster = this.store.getMonsterInstance(combat.monsterInstanceId);
     if (!monster || combat.status !== 'active') return { combat, finished: false };
 
-    // Player attacks
     const pAtk = player.attack + (player.equippedItems.weapon?.item.stats?.attack || 0);
     const mDef = monster.monster.defense;
     const damage = Math.max(1, pAtk - mDef + Math.floor(Math.random() * 5));
@@ -46,7 +45,6 @@ export class CombatEngine {
       return { combat, finished: true, result };
     }
 
-    // Monster attacks back
     const mAtk = monster.monster.attack;
     const pDef = player.defense + (player.equippedItems.armor?.item.stats?.defense || 0);
     const mDmg = Math.max(1, mAtk - pDef + Math.floor(Math.random() * 3));
@@ -82,7 +80,6 @@ export class CombatEngine {
       combat.status = 'fled';
       return { combat, success: true };
     }
-    // Failed flee, monster gets free attack
     const monster = this.store.getMonsterInstance(combat.monsterInstanceId);
     if (monster) {
       const mDmg = Math.max(1, monster.monster.attack - player.defense);
@@ -115,7 +112,6 @@ export class CombatEngine {
     player.exp += expGained;
     player.gold += goldGained;
 
-    // Add drops to inventory
     for (const drop of drops) {
       const existing = player.inventory.find(i => i.item.id === drop.item.id && i.item.stackable);
       if (existing) {
@@ -125,7 +121,6 @@ export class CombatEngine {
       }
     }
 
-    // Level up check
     let levelUp = false;
     while (player.level < MAX_LEVEL && player.exp >= getExpForLevel(player.level + 1)) {
       player.level++;

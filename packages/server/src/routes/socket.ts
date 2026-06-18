@@ -26,7 +26,6 @@ export function registerSocketHandlers(
       const player = store.getPlayer(playerId);
       if (!player) return;
 
-      // Clamp to zone bounds
       const zone = ZONES[player.zone];
       if (zone) {
         position.x = Math.max(0, Math.min(zone.bounds.width, position.x));
@@ -35,7 +34,6 @@ export function registerSocketHandlers(
       player.position = position;
       player.lastActive = Date.now();
 
-      // Check zone transitions
       if (zone) {
         for (const exit of zone.exits) {
           if (
@@ -52,7 +50,6 @@ export function registerSocketHandlers(
                 type: 'zone_change',
                 message: `Entering ${newZone.name}...`,
               });
-              // Auto-spawn monsters for new zone
               spawnZoneMonsters(store, exit.toZone, io);
             }
           }
@@ -69,7 +66,6 @@ export function registerSocketHandlers(
       const monster = store.getMonsterInstance(monsterInstanceId);
       if (!player || !monster) return;
 
-      // Start combat if not already
       let activeCombat = Array.from(store.activeCombats.values())
         .find(c => c.playerId === playerId && c.status === 'active');
       if (!activeCombat) {
@@ -154,12 +150,10 @@ export function registerSocketHandlers(
     });
   });
 
-  // Helper: register socket with player
   function registerPlayer(socketId: string, playerId: string) {
     store.connectedSockets.set(socketId, playerId);
   }
 
-  // Export for use in REST routes if needed
   (io as any).registerPlayer = registerPlayer;
 }
 
@@ -167,7 +161,6 @@ function spawnZoneMonsters(store: GameStore, zoneId: string, io: Server) {
   const zone = ZONES[zoneId];
   if (!zone || zone.monsters.length === 0) return;
 
-  // Only spawn if few monsters in zone
   const existing = Array.from(store.monsterInstances.values()).filter(m => m.monster.zone === zoneId);
   if (existing.length >= 5) return;
 

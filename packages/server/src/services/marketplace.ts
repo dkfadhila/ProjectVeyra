@@ -36,22 +36,18 @@ export class MarketplaceService {
     const tax = Math.floor(totalPrice * taxRate);
     const totalCost = totalPrice + tax;
 
-    // Check currency
     if (listing.currency === 'gold' && buyer.gold < totalCost) return { success: false, error: 'Not enough gold' };
     if (listing.currency === 'vs' && buyer.vs < totalCost) return { success: false, error: 'Not enough VS' };
 
-    // Deduct from buyer
     if (listing.currency === 'gold') buyer.gold -= totalCost;
     else buyer.vs -= totalCost;
 
-    // Pay seller
     const seller = this.store.getPlayer(listing.sellerId);
     if (seller) {
       if (listing.currency === 'gold') seller.gold += totalPrice;
       else seller.vs += totalPrice;
     }
 
-    // Add item to buyer inventory
     const existingBuyerItem = buyer.inventory.find(i => i.item.id === listing.itemId && i.item.stackable);
     if (existingBuyerItem) {
       existingBuyerItem.quantity += quantity;
@@ -59,7 +55,6 @@ export class MarketplaceService {
       buyer.inventory.push({ item: { id: listing.itemId, name: listing.itemName } as any, quantity });
     }
 
-    // Update listing
     listing.quantity -= quantity;
     if (listing.quantity <= 0) this.store.marketListings.delete(listingId);
 
@@ -70,7 +65,6 @@ export class MarketplaceService {
     const listing = this.store.marketListings.get(listingId);
     if (!listing || listing.sellerId !== player.id) return false;
 
-    // Return item to seller
     const existing = player.inventory.find(i => i.item.id === listing.itemId && i.item.stackable);
     if (existing) existing.quantity += listing.quantity;
     else player.inventory.push({ item: { id: listing.itemId, name: listing.itemName } as any, quantity: listing.quantity });

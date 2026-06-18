@@ -16,7 +16,6 @@ export function registerRoutes(
   combat: CombatEngine,
   marketplace: MarketplaceService,
 ) {
-  // Health
   app.get('/api/health', (_req, res) => {
     res.json({
       status: 'ok',
@@ -27,7 +26,6 @@ export function registerRoutes(
     });
   });
 
-  // --- Player ---
   app.post('/api/player/create', (req: Request, res: Response) => {
     const { name, playerClass } = req.body;
     if (!name || !playerClass) {
@@ -52,7 +50,6 @@ export function registerRoutes(
     res.json(player);
   });
 
-  // --- Zones ---
   app.get('/api/zones', (_req, res) => {
     res.json(Object.values(ZONES));
   });
@@ -63,7 +60,6 @@ export function registerRoutes(
     res.json(zone);
   });
 
-  // --- Monsters ---
   app.get('/api/monsters', (_req, res) => {
     res.json(Object.values(MONSTERS));
   });
@@ -82,12 +78,10 @@ export function registerRoutes(
     res.json(instance);
   });
 
-  // --- Items ---
   app.get('/api/items', (_req, res) => {
     res.json(Object.values(ITEMS));
   });
 
-  // --- Combat ---
   app.post('/api/combat/start', (req, res) => {
     const { playerId, monsterInstanceId } = req.body;
     const player = store.getPlayer(playerId);
@@ -139,7 +133,6 @@ export function registerRoutes(
     res.json(combat.playerFlee(state, player));
   });
 
-  // --- Quests ---
   app.get('/api/quests', (_req, res) => {
     res.json(Object.values(QUESTS));
   });
@@ -178,7 +171,6 @@ export function registerRoutes(
     const pq = quests.find(q => q.quest.id === questId && q.status === 'active');
     if (!pq) return res.status(400).json({ error: 'Quest not active' });
 
-    // Check objectives
     const allDone = pq.quest.objectives.every(o => o.current >= o.required);
     if (!allDone) return res.status(400).json({ error: 'Objectives not complete' });
 
@@ -187,7 +179,6 @@ export function registerRoutes(
     player.completedQuests.push(questId);
     player.activeQuests = player.activeQuests.filter(q => q.id !== questId);
 
-    // Rewards
     const r = pq.quest.rewards;
     player.exp += r.exp;
     player.gold += r.gold;
@@ -212,7 +203,6 @@ export function registerRoutes(
     res.json({ quest: pq, rewards: r });
   });
 
-  // --- Lyra AI ---
   app.post('/api/lyra/talk', async (req, res) => {
     const { playerId, message } = req.body;
     const player = store.getPlayer(playerId);
@@ -269,7 +259,6 @@ export function registerRoutes(
     });
   });
 
-  // --- Marketplace ---
   app.get('/api/market', (_req, res) => {
     res.json(marketplace.getAllListings());
   });
@@ -300,7 +289,6 @@ export function registerRoutes(
     res.json({ success: true });
   });
 
-  // --- Exchange ---
   app.post('/api/exchange/vs-to-veya', (req, res) => {
     const { playerId, amount } = req.body;
     const player = store.getPlayer(playerId);
@@ -316,13 +304,11 @@ export function registerRoutes(
     res.json({ vs: player.vs, veya: player.veyA });
   });
 
-  // --- Chronicle ---
   app.get('/api/chronicle', (req, res) => {
     const limit = parseInt(req.query.limit as string) || 50;
     res.json(store.chronicle.slice(-limit).reverse());
   });
 
-  // --- Constants ---
   app.get('/api/constants', (_req, res) => {
     res.json({
       marketTax: MARKET_TAX_RATE,

@@ -1,7 +1,6 @@
 import { Item } from '@project-veyra/shared';
 
 export const ITEMS: Record<string, Item> = {
-  // Materials
   slime_core: {
     id: 'slime_core', name: 'Slime Core', description: 'A glowing core from a Tide Slime.',
     type: 'material', rarity: 'common', value: 15, stackable: true, maxStack: 99,
@@ -23,7 +22,6 @@ export const ITEMS: Record<string, Item> = {
     type: 'material', rarity: 'uncommon', value: 55, stackable: true, maxStack: 99,
   },
 
-  // Weapons
   rusty_sword: {
     id: 'rusty_sword', name: 'Rusty Sword', description: 'A basic but reliable sword.',
     type: 'weapon', rarity: 'common', value: 100, stackable: false, maxStack: 1,
@@ -40,7 +38,6 @@ export const ITEMS: Record<string, Item> = {
     stats: { attack: 20, speed: 3 },
   },
 
-  // Armor
   leather_vest: {
     id: 'leather_vest', name: 'Leather Vest', description: 'Basic leather protection.',
     type: 'armor', rarity: 'common', value: 120, stackable: false, maxStack: 1,
@@ -52,7 +49,6 @@ export const ITEMS: Record<string, Item> = {
     stats: { defense: 10 },
   },
 
-  // Consumables
   health_potion: {
     id: 'health_potion', name: 'Health Potion', description: 'Restores 50 HP.',
     type: 'consumable', rarity: 'common', value: 30, stackable: true, maxStack: 20,
@@ -64,7 +60,6 @@ export const ITEMS: Record<string, Item> = {
     effect: { type: 'heal', value: 30 },
   },
 
-  // Gifts for Lyra
   moonflower: {
     id: 'moonflower', name: 'Moonflower', description: 'A rare flower that blooms under moonlight. Lyra would love this.',
     type: 'gift', rarity: 'uncommon', value: 200, stackable: true, maxStack: 10,

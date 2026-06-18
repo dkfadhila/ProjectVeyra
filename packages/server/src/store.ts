@@ -13,7 +13,7 @@ export class GameStore {
   marketListings: Map<string, MarketListing> = new Map();
   lyraMemory: Map<string, LyraMemory> = new Map();
   chronicle: ChronicleEntry[] = [];
-  connectedSockets: Map<string, string> = new Map(); // socketId -> playerId
+  connectedSockets: Map<string, string> = new Map();
 
   createPlayer(name: string, playerClass: PlayerClass): Player {
     const base = CLASS_BASE_STATS[playerClass];

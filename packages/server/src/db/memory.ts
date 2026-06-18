@@ -1,6 +1,3 @@
-/**
- * In-memory database. Replace with PostgreSQL/Redis later.
- */
 import type {
   Player,
   MonsterInstance,
@@ -22,7 +19,6 @@ class InMemoryDB {
   chronicle: ChronicleEntry[] = [];
   playerQuests: Map<string, Map<string, { quest: Quest; status: 'active' | 'completed' | 'failed'; startedAt: number; completedAt?: number }>> = new Map();
 
-  // Track online socket -> playerId mapping
   socketToPlayer: Map<string, string> = new Map();
   playerToSocket: Map<string, string> = new Map();
 
@@ -52,7 +48,6 @@ class InMemoryDB {
 
   addChronicleEntry(entry: ChronicleEntry): void {
     this.chronicle.push(entry);
-    // Keep last 500
     if (this.chronicle.length > 500) {
       this.chronicle = this.chronicle.slice(-500);
     }

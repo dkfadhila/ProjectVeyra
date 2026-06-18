@@ -6,7 +6,7 @@ import { removeItemFromInventory, addItemToInventory } from './playerService';
 
 const MARKET_TAX_RATE = 0.05;
 const SOULBOND_TAX_RATE = 0.02;
-const LISTING_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const LISTING_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 
 export function createListing(
   sellerId: string,
@@ -63,7 +63,6 @@ export function buyListing(
   const tax = Math.floor(totalPrice * taxRate);
   const sellerReceives = totalPrice - tax;
 
-  // Check buyer has enough currency
   if (listing.currency === 'gold' && buyer.gold < totalPrice) {
     return { success: false, message: 'Not enough gold.' };
   }
@@ -71,7 +70,6 @@ export function buyListing(
     return { success: false, message: 'Not enough VS.' };
   }
 
-  // Transfer currency
   if (listing.currency === 'gold') {
     buyer.gold -= totalPrice;
   } else {
@@ -89,10 +87,8 @@ export function buyListing(
     db.savePlayer(seller);
   }
 
-  // Transfer items
   addItemToInventory(buyer, listing.itemId, quantity);
 
-  // Update listing
   listing.quantity -= quantity;
   if (listing.quantity <= 0) {
     db.marketListings.delete(listingId);

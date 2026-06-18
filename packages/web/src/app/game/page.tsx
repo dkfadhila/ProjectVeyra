@@ -26,17 +26,14 @@ export default function GamePage() {
   const [notifications, setNotifications] = useState<{ id: number; msg: string }[]>([]);
   const notifId = useRef(0);
 
-  // Load player
   useEffect(() => {
     const saved = localStorage.getItem("veyra_player");
     if (!saved) { router.push("/"); return; }
     const p = JSON.parse(saved) as Player;
     setPlayer(p);
 
-    // Load monsters in zone
     api.getMonstersInZone(p.zone).then(setMonsters).catch(() => {});
 
-    // Spawn initial monsters
     const spawnMonsters = async () => {
       try {
         const zoneMonsters = ["tide_slime", "sand_crab"];
@@ -50,7 +47,6 @@ export default function GamePage() {
     spawnMonsters();
   }, [router]);
 
-  // Socket
   useEffect(() => {
     const socket = getSocket();
     socket.on("monster:spawned", (m) => setMonsters((prev) => [...prev, m]));
@@ -90,7 +86,6 @@ export default function GamePage() {
       if (result.finished && result.result) {
         setCombatResult(result.result);
         if (result.result.levelUp) addNotification(`Level Up! Now level ${result.result.newLevel}!`);
-        // Refresh player
         const updated = await api.getPlayer(player.id);
         setPlayer(updated);
         localStorage.setItem("veyra_player", JSON.stringify(updated));
@@ -125,7 +120,6 @@ export default function GamePage() {
   const closeCombat = () => {
     setCombat(null);
     setCombatResult(null);
-    // Refresh monsters
     if (player) api.getMonstersInZone(player.zone).then(setMonsters).catch(() => {});
   };
 
