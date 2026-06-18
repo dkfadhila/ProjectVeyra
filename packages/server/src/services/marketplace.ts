@@ -52,11 +52,11 @@ export class MarketplaceService {
     }
 
     // Add item to buyer inventory
-    const existing = buyer.inventory.find(i => i.item.id === listing.itemId && i.item.stackable);
-    if (existing) {
-      existing.quantity += quantity;
+    const existingBuyerItem = buyer.inventory.find(i => i.item.id === listing.itemId && i.item.stackable);
+    if (existingBuyerItem) {
+      existingBuyerItem.quantity += quantity;
     } else {
-      buyer.inventory.push({ item: existing?.item || { id: listing.itemId, name: listing.itemName } as any, quantity });
+      buyer.inventory.push({ item: { id: listing.itemId, name: listing.itemName } as any, quantity });
     }
 
     // Update listing
