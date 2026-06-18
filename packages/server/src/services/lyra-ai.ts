@@ -58,7 +58,7 @@ RULES:
           { role: 'system', content: system },
           { role: 'user', content: message },
         ],
-        max_tokens: 200,
+        max_tokens: 512,
         temperature: 0.7,
       });
 
@@ -95,7 +95,7 @@ RULES:
           { role: 'system', content: `You are Lyra, merchant NPC. Player ${player.name} just gave you "${itemName}". React with genuine emotion. Your resonance with them is ${player.resonance}/100 (${level}). Keep response to 1-2 sentences.` },
           { role: 'user', content: `*gives you ${itemName}*` },
         ],
-        max_tokens: 100,
+        max_tokens: 512,
         temperature: 0.8,
       });
 
