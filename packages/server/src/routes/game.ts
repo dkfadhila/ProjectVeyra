@@ -3,6 +3,7 @@ import { GameStore } from '../store';
 import { LyraAI } from '../services/lyra-ai';
 import { CombatEngine } from '../services/combat';
 import { MarketplaceService } from '../services/marketplace';
+import { OGStorageService } from '../services/og-storage';
 import { PlayerClass, MARKET_TAX_RATE, SOULBOND_TAX_RATE, VS_TO_VEYA_RATE } from '@project-veyra/shared';
 import { ITEMS } from '../data/items';
 import { MONSTERS } from '../data/monsters';
@@ -15,6 +16,7 @@ export function registerRoutes(
   lyraAI: LyraAI,
   combat: CombatEngine,
   marketplace: MarketplaceService,
+  ogStorage: OGStorageService,
 ) {
   app.get('/api/health', (_req, res) => {
     res.json({
@@ -220,10 +222,13 @@ export function registerRoutes(
     memory.lastInteraction = Date.now();
     memory.totalInteractions++;
 
+    const storageResult = await ogStorage.uploadLyraMemory(playerId, memory);
+
     res.json({
       message: result.response,
       resonanceChange: result.resonanceChange,
       newResonance: player.resonance,
+      storedHash: storageResult.hash,
     });
   });
 
@@ -314,6 +319,19 @@ export function registerRoutes(
       marketTax: MARKET_TAX_RATE,
       soulbondTax: SOULBOND_TAX_RATE,
       vsToVeya: VS_TO_VEYA_RATE,
+    });
+  });
+
+  app.post('/api/storage/chronicle', async (_req, res) => {
+    const result = await ogStorage.uploadChronicle(store.chronicle);
+    res.json(result);
+  });
+
+  app.get('/api/storage/status', (_req, res) => {
+    res.json({
+      mode: process.env.OG_REAL_STORAGE === 'true' ? '0G-testnet' : 'mock',
+      evmRpc: process.env.OG_EVM_RPC || 'https://evmrpc-testnet.0g.ai',
+      indexerRpc: process.env.OG_INDEXER_RPC || 'https://indexer-storage-testnet-turbo.0g.ai',
     });
   });
 }

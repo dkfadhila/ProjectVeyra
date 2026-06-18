@@ -11,6 +11,7 @@ import { CombatEngine } from './services/combat';
 import { MarketplaceService } from './services/marketplace';
 import { registerRoutes } from './routes/game';
 import { registerSocketHandlers } from './routes/socket';
+import { OGStorageService } from './services/og-storage';
 
 const PORT = parseInt(process.env.PORT || '3001');
 const AI_BASE_URL = process.env.AI_BASE_URL || 'http://localhost:20128/v1';
@@ -31,8 +32,9 @@ async function main() {
   const lyraAI = new LyraAI(AI_BASE_URL, AI_MODEL, AI_API_KEY);
   const combat = new CombatEngine(store);
   const marketplace = new MarketplaceService(store);
+  const ogStorage = new OGStorageService(process.env.OG_REAL_STORAGE === 'true');
 
-  registerRoutes(app, store, lyraAI, combat, marketplace);
+  registerRoutes(app, store, lyraAI, combat, marketplace, ogStorage);
   registerSocketHandlers(io, store, lyraAI, combat, marketplace);
 
   server.listen(PORT, () => {
