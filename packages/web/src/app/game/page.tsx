@@ -11,6 +11,7 @@ import CombatOverlay from "@/components/CombatOverlay";
 import InventoryPanel from "@/components/InventoryPanel";
 import QuestPanel from "@/components/QuestPanel";
 import MarketPanel from "@/components/MarketPanel";
+import TutorialOverlay from "@/components/TutorialOverlay";
 import type { Player, MonsterInstance, CombatState, CombatResult } from "@project-veyra/shared";
 
 export default function GamePage() {
@@ -23,6 +24,7 @@ export default function GamePage() {
   const [showInventory, setShowInventory] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
   const [showMarket, setShowMarket] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [notifications, setNotifications] = useState<{ id: number; msg: string }[]>([]);
   const notifId = useRef(0);
 
@@ -31,6 +33,9 @@ export default function GamePage() {
     if (!saved) { router.push("/"); return; }
     const p = JSON.parse(saved) as Player;
     setPlayer(p);
+
+    const tutorialDone = localStorage.getItem("veyra_tutorial_done");
+    if (tutorialDone !== "true") setShowTutorial(true);
 
     api.getMonstersInZone(p.zone).then(setMonsters).catch(() => {});
 
@@ -112,7 +117,7 @@ export default function GamePage() {
         addNotification("Escaped!");
         setCombat(null);
       } else {
-        addNotification("Can't escape!");
+        addNotification("Can\'t escape!");
       }
     } catch {}
   };
@@ -127,7 +132,8 @@ export default function GamePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Top bar */}
+      {showTutorial && <TutorialOverlay onComplete={() => setShowTutorial(false)} />}
+
       <div className="flex items-center justify-between p-2 bg-veyra-navy/90 border-b border-veyra-purple/20">
         <div className="flex items-center gap-4">
           <span className="text-veyra-purple font-bold">PROJECT VEYRA</span>
@@ -135,21 +141,18 @@ export default function GamePage() {
         </div>
         <div className="flex gap-2">
           <button onClick={() => setShowInventory(!showInventory)} className="px-3 py-1 text-xs bg-veyra-dark rounded hover:bg-veyra-purple/30">Inventory</button>
-          <button onClick={() => setShowQuests(!showQuests)} className="px-3 py-1 text-xs bg-veyra-dark rounded hover:bg-veyra-purple/30">Quests</button>
-          <button onClick={() => setShowMarket(!showMarket)} className="px-3 py-1 text-xs bg-veyra-dark rounded hover:bg-veyra-purple/30">Market</button>
-          <button onClick={() => setShowDialogue(true)} className="px-3 py-1 text-xs bg-veyra-purple/60 rounded hover:bg-veyra-purple">Talk to Lyra</button>
+          <button id="quests-btn" onClick={() => setShowQuests(!showQuests)} className="px-3 py-1 text-xs bg-veyra-dark rounded hover:bg-veyra-purple/30">Quests</button>
+          <button id="market-btn" onClick={() => setShowMarket(!showMarket)} className="px-3 py-1 text-xs bg-veyra-dark rounded hover:bg-veyra-purple/30">Market</button>
+          <button id="lyra-btn" onClick={() => setShowDialogue(true)} className="px-3 py-1 text-xs bg-veyra-purple/60 rounded hover:bg-veyra-purple">Talk to Lyra</button>
+          <button onClick={() => setShowTutorial(true)} className="px-2 py-1 text-xs bg-veyra-dark rounded hover:bg-veyra-purple/30 text-gray-500" title="Replay Tutorial">?</button>
         </div>
       </div>
 
       <div className="flex-1 flex">
-        {/* Game Area */}
         <div className="flex-1 relative">
           <GameCanvas player={player} monsters={monsters} onMonsterClick={handleMonsterClick} />
-
-          {/* HUD */}
           <HUD player={player} />
 
-          {/* Notifications */}
           <div className="absolute top-4 right-4 flex flex-col gap-2 z-30">
             {notifications.map((n) => (
               <div key={n.id} className="px-4 py-2 bg-veyra-purple/80 rounded text-sm animate-pulse">
@@ -159,13 +162,11 @@ export default function GamePage() {
           </div>
         </div>
 
-        {/* Side Panels */}
         {showInventory && <InventoryPanel player={player} onClose={() => setShowInventory(false)} />}
         {showQuests && <QuestPanel player={player} onClose={() => setShowQuests(false)} />}
         {showMarket && <MarketPanel player={player} onClose={() => setShowMarket(false)} />}
       </div>
 
-      {/* Dialogue */}
       {showDialogue && (
         <DialogueBox
           player={player}
@@ -174,7 +175,6 @@ export default function GamePage() {
         />
       )}
 
-      {/* Combat Overlay */}
       {combat && (
         <CombatOverlay
           combat={combat}
