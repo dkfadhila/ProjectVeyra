@@ -1,26 +1,26 @@
 # Project Veyra
 
-**Realm of the Soulbond** — 2D pixel RPG berbasis web yang terinspirasi dari game klasik JRPG.
+**Realm of the Soulbond** — A 2D pixel RPG inspired by classic JRPGs, running directly in the browser.
 
-## Tentang
+## About
 
-Project Veyra adalah game RPG multiplayer yang berjalan langsung di browser. Pemain menjelajahi dunia Lunaris Village, bertarung melawan monster, berinteraksi dengan NPC yang ditenagai AI, dan membangun hubungan dengan Soul Maiden.
+Project Veyra is a multiplayer browser RPG where players explore the world of Lunaris Village, battle monsters, interact with AI-powered NPCs, and build relationships with Soul Maidens.
 
-## Fitur Utama
+## Features
 
-- **7 Class** — Astral Knight, Voidborn Ranger, Aether Mage, Star Alchemist, Astral Merchant, Rogue, Cleric
-- **Soul Maiden System** — Resonance, gift-giving, AI-powered conversations
-- **Combat** — Turn-based battle dengan skill dan item drops
-- **Marketplace** — Sistem ekonomi dengan VS dan VEYA token
-- **Multiplayer** — Real-time posisi sync via Socket.IO
-- **Lyra AI** — NPC Oracle yang ditenagai 9Router, bisa diajak bicara dan diberi hadiah
-- **0G Storage** — State player terverifikasi di-chain
-- **Quest System** — Quest berantai dengan reward
-- **Auto-save** — Progress tersimpan ototmatis di server dan localStorage
+- **7 Classes** — Astral Knight, Voidborn Ranger, Aether Mage, Star Alchemist, Astral Merchant, Rogue, Cleric
+- **Soul Maiden System** — Resonance tracking, gift-giving, AI-powered conversations
+- **Combat** — Turn-based battle with skills and item drops
+- **Marketplace** — Player-driven economy with VS and VEYA tokens
+- **Multiplayer** — Real-time position sync via Socket.IO
+- **Lyra AI** — Oracle NPC powered by 9Router (Claude Sonnet), responds to dialogue and gifts
+- **0G Storage** — On-chain verified player state persistence
+- **Quest System** — Chained quests with progression and rewards
+- **Auto-save** — Progress saved automatically to server and localStorage
 
-## Dunia
+## World
 
-Lunaris Village adalah desa kecil yang damai, dikelilingi hutan, sungai, dan area petualangan. Di sinilah para traveler memulai perjalanan mereka.
+Lunaris Village is a peaceful small town surrounded by forests, rivers, and adventure zones. This is where travelers begin their journey.
 
 ## Tech Stack
 
@@ -32,4 +32,4 @@ Lunaris Village adalah desa kecil yang damai, dikelilingi hutan, sungai, dan are
 
 ---
 
-*Project Veyra sedang dalam tahap pengembangan aktif.*
+*Project Veyra is in active development.*
