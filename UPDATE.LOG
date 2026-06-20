@@ -1,0 +1,48 @@
+# UPDATE.LOG — Project Veyra
+
+---
+
+## v0.0.2 BETA (21 June 2026)
+
+### Backend Systems
+- Added JWT authentication (register, login, session validation)
+- Added unique username system (case-insensitive check)
+- Added player database with persistent storage (JSON-based)
+- Added 0G Storage integration (proof generation, upload, verify, state save/load)
+- Added SoulMaiden system (resonance, gifts, AI conversations)
+- Added Combat engine (attack, heal, flee, skill usage, item drops)
+- Added Marketplace (list, buy, cancel, VS-to-VEYA exchange)
+- Added Quest system (accept, progress, complete with rewards)
+- Added Chronicle & Leaderboard APIs
+- Added Socket.IO multiplayer (position sync, combat updates, notifications)
+
+### Frontend Integration
+- Added auth screens (login/register) with styled UI
+- Added auth.js module (full API client for all endpoints)
+- Added socket.js module (Socket.IO client wrapper)
+- Updated main.js with server integration flow:
+  - Auth check on boot → login/register → character creation → play
+  - Socket connected on game start
+  - Auto-save to server every 15 seconds
+  - Lyra NPC talk via server API
+  - Monster/combat socket events handled
+- Fixed API endpoint mismatches (create-character → player/create, etc.)
+
+### Infrastructure
+- Express server serves frontend static files
+- Single process: backend + frontend on port 8790
+- .env configuration (JWT_SECRET, PORT)
+- .gitignore (node_modules, .env, *.db)
+
+---
+
+## v0.0.1 BETA (initial)
+- Frontend Canvas2D RPG engine
+- 7 character classes with stats & skills
+- NPC system with dialogue
+- Monster spawning & combat
+- Building interiors & furniture interaction
+- Soul Maiden bonding (AI-powered)
+- Map system with minimap & zone banners
+- Inventory, character, quest, soulbond panels
+- Auto-save (localStorage)
