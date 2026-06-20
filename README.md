@@ -13,7 +13,7 @@ Project Veyra is a multiplayer browser RPG where players explore the world of Lu
 - **Combat** — Turn-based battle with skills and item drops
 - **Marketplace** — Player-driven economy with VS and VEYA tokens
 - **Multiplayer** — Real-time position sync via Socket.IO
-- **Lyra AI** — Oracle NPC powered by 9Router (Claude Sonnet), responds to dialogue and gifts
+- **Lyra AI** — Oracle NPC powered by MIMO, responds to dialogue and gifts
 - **0G Storage** — On-chain verified player state persistence
 - **Quest System** — Chained quests with progression and rewards
 - **Auto-save** — Progress saved automatically to server and localStorage
@@ -27,7 +27,7 @@ Lunaris Village is a peaceful small town surrounded by forests, rivers, and adve
 - **Frontend:** Vanilla JS + Canvas2D
 - **Backend:** Express.js + Socket.IO
 - **Auth:** JWT + bcrypt
-- **AI:** Lyra NPC via 9Router (Claude Sonnet)
+- **AI:** Lyra NPC  (MIMO)
 - **Storage:** 0G Storage (on-chain verification)
 
 ---
