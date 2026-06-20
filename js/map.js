@@ -1,17 +1,17 @@
 
 import { BUILDINGS, NPC_LIST, MONSTERS, TILE_SIZE } from './data.js';
 
-export const MAP_TILES_W = 200;
-export const MAP_TILES_H = 150;
-export const WORLD_W = MAP_TILES_W * TILE_SIZE; // 6400
-export const WORLD_H = MAP_TILES_H * TILE_SIZE; // 4800
+export const MAP_TILES_W = 78;
+export const MAP_TILES_H = 78;
+export const WORLD_W = MAP_TILES_W * TILE_SIZE;
+export const WORLD_H = MAP_TILES_H * TILE_SIZE;
 
 export const MAP_OBJECTS = [];
 export const COLLISION_RECTS = [];
 
-const PLAZA = { x0: 90, y0: 67, x1: 110, y1: 83 };
-const PLAZA_CX = (PLAZA.x0 + PLAZA.x1) / 2; // 100
-const PLAZA_CY = (PLAZA.y0 + PLAZA.y1) / 2; // 75
+const PLAZA = { x0: 34, y0: 34, x1: 44, y1: 44 };
+const PLAZA_CX = (PLAZA.x0 + PLAZA.x1) / 2;
+const PLAZA_CY = (PLAZA.y0 + PLAZA.y1) / 2;
 
 export const PLAYER_SPAWN = {
   x: PLAZA_CX * TILE_SIZE,
@@ -54,12 +54,12 @@ const BUILDING_SIZE = {
 const isHouse = (id) => /^house\d+|^house_new\d+$/.test(id);
 
 const TOWN_ROWS = [
-  { roadTileY: 72, startX: 58,  gap: 3, ids: ['market', 'inn_basic'] },     // west of plaza
-  { roadTileY: 72, startX: 112, gap: 3, ids: ['inn', 'inn_medium', 'inn_luxury', 'blacksmith', 'house3'] },   // east of plaza
-  { roadTileY: 38, startX: 60,  gap: 3, ids: ['house1', 'inn_basic', 'house7', 'house_new1'] },
-  { roadTileY: 38, startX: 112, gap: 3, ids: ['house2', 'inn_medium', 'house8', 'house_new2'] },
-  { roadTileY: 110, startX: 60,  gap: 3, ids: ['house4', 'inn', 'house9', 'house_new3'] },
-  { roadTileY: 110, startX: 130, gap: 3, ids: ['house10', 'inn_luxury', 'house_new4'] },
+  { roadTileY: 36, startX: 22,  gap: 2, ids: ['market', 'inn_basic'] },
+  { roadTileY: 36, startX: 46,  gap: 2, ids: ['inn', 'inn_medium', 'blacksmith'] },
+  { roadTileY: 20, startX: 24,  gap: 2, ids: ['house1', 'house7', 'house_new1'] },
+  { roadTileY: 20, startX: 48,  gap: 2, ids: ['house2', 'house8', 'house_new2'] },
+  { roadTileY: 52, startX: 24,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
+  { roadTileY: 52, startX: 52,  gap: 2, ids: ['house10', 'house_new4'] },
 ];
 
 const SOLO_BUILDINGS = [];
@@ -95,18 +95,18 @@ function buildBuildingDefs() {
 const BUILDING_DEFS = buildBuildingDefs();
 
 const PATH_DEFS = [
-  { tx: 98, ty: 6, tw: 4, th: 138 },
-  { tx: 6, ty: 72, tw: 188, th: 4 },
-  { tx: 40, ty: 38, tw: 120, th: 3 },
-  { tx: 40, ty: 110, tw: 120, th: 3 },
-  { tx: 50, ty: 38, tw: 3, th: 75 },
-  { tx: 148, ty: 38, tw: 3, th: 75 },
+  { tx: 38, ty: 2, tw: 3, th: 74 },
+  { tx: 2, ty: 36, tw: 74, th: 3 },
+  { tx: 16, ty: 20, tw: 48, th: 2 },
+  { tx: 16, ty: 52, tw: 48, th: 2 },
+  { tx: 20, ty: 20, tw: 2, th: 34 },
+  { tx: 60, ty: 20, tw: 2, th: 34 },
   { tx: PLAZA.x0, ty: PLAZA.y0, tw: PLAZA.x1 - PLAZA.x0, th: PLAZA.y1 - PLAZA.y0 },
 ];
 
 const WATER_DEFS = [];
 
-const FARM_DEF = { tx: 14, ty: 60, tw: 10, th: 22 };
+const FARM_DEF = { tx: 6, ty: 28, tw: 8, th: 12 };
 
 const NPC_PLACEMENTS = [
   { id: 'innkeeper',      sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn'        }, facing: 'down' },
@@ -115,23 +115,23 @@ const NPC_PLACEMENTS = [
   { id: 'innkeeper_south',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_luxury' }, facing: 'down' },
   { id: 'blacksmith', sprite: 'knight',     anchor: { kind: 'door',  building: 'blacksmith' }, facing: 'down' },
   { id: 'merchant',   sprite: 'shopkeeper', anchor: { kind: 'door',  building: 'market'     }, facing: 'down' },
-  { id: 'farmer',     sprite: 'farmer',     anchor: { kind: 'point', tx: 18, ty: 66 },          facing: 'right' },
+  { id: 'farmer',     sprite: 'farmer',     anchor: { kind: 'point', tx: 10, ty: 32 },          facing: 'right' },
   { id: 'professor',  sprite: 'professor',  anchor: { kind: 'point', tx: PLAZA_CX + 4, ty: PLAZA_CY + 1 }, facing: 'left' },
   { id: 'lyra',       sprite: 'lyra',       anchor: { kind: 'point', tx: PLAZA_CX,     ty: PLAZA_CY + 4 }, facing: 'up' },
 ];
 
 const MONSTER_SPAWNS = [
-  { tx: 30,  ty: 4,   radius: 160, monsters: ['spectera', 'dollfin'] },   // north forest
-  { tx: 194, ty: 75,  radius: 160, monsters: ['vulpyre', 'spectera'] },   // east forest
-  { tx: 180, ty: 144, radius: 160, monsters: ['eruptibus', 'devidra'] },  // south-east forest
-  { tx: 6,   ty: 130, radius: 160, monsters: ['vulpyre', 'dollfin'] },    // south-west forest
+  { tx: 14, ty: 4,   radius: 120, monsters: ['spectera', 'dollfin'] },
+  { tx: 70, ty: 39,  radius: 120, monsters: ['vulpyre', 'spectera'] },
+  { tx: 64, ty: 72,  radius: 120, monsters: ['eruptibus', 'devidra'] },
+  { tx: 4,  ty: 66,  radius: 120, monsters: ['vulpyre', 'dollfin'] },
 ];
 
 export function generateMap() {
   MAP_OBJECTS.length = 0;
   COLLISION_RECTS.length = 0;
 
-  const rng = makeRng(0xC0FFEE); // deterministic scatter seed
+  const rng = makeRng(0xC0FFEE);
 
   for (const p of PATH_DEFS) {
     MAP_OBJECTS.push({
@@ -147,7 +147,7 @@ export function generateMap() {
     COLLISION_RECTS.push({ ...rect, source: 'water' });
 
     const x0 = w.tx - 1, y0 = w.ty - 1;
-    const x1 = w.tx + w.tw, y1 = w.ty + w.th; // exclusive outer edge
+    const x1 = w.tx + w.tw, y1 = w.ty + w.th;
     for (let tx = x0; tx <= x1; tx++) {
       for (let ty = y0; ty <= y1; ty++) {
         const onEdge = (tx === x0 || tx === x1 || ty === y0 || ty === y1);
@@ -176,7 +176,7 @@ export function generateMap() {
     MAP_OBJECTS.push({ type: 'farm', x: fx, y: fy, w: fw, h: fh });
   }
 
-  const buildingRects = {}; // id -> pixel rect (+door), for NPC anchoring
+  const buildingRects = {};
   for (const b of BUILDING_DEFS) {
     const rect = { x: t2p(b.tx), y: t2p(b.ty) + (b.offsetY || 0), w: t2p(b.tw), h: t2p(b.th) };
     buildingRects[b.id] = { ...rect, door: b.door };
@@ -222,11 +222,11 @@ export function generateMap() {
   }
 
   function inForestBorder(tx, ty) {
-    return tx < 8 || tx > 192 || ty < 6 || ty > 144;
+    return tx < 4 || tx > 74 || ty < 4 || ty > 74;
   }
 
   let placedBorder = 0;
-  for (let attempt = 0; attempt < 2000 && placedBorder < 120; attempt++) {
+  for (let attempt = 0; attempt < 1200 && placedBorder < 60; attempt++) {
     const tx = Math.floor(rng() * MAP_TILES_W);
     const ty = Math.floor(rng() * MAP_TILES_H);
     if (!inForestBorder(tx, ty)) continue;
@@ -238,9 +238,9 @@ export function generateMap() {
   }
 
   let placedInterior = 0;
-  for (let attempt = 0; attempt < 1500 && placedInterior < 40; attempt++) {
-    const tx = 10 + Math.floor(rng() * (MAP_TILES_W - 20));
-    const ty = 8 + Math.floor(rng() * (MAP_TILES_H - 16));
+  for (let attempt = 0; attempt < 800 && placedInterior < 20; attempt++) {
+    const tx = 6 + Math.floor(rng() * (MAP_TILES_W - 12));
+    const ty = 6 + Math.floor(rng() * (MAP_TILES_H - 12));
     if (tx >= PLAZA.x0 - 1 && tx <= PLAZA.x1 && ty >= PLAZA.y0 - 1 && ty <= PLAZA.y1) continue;
     const px = t2p(tx), py = t2p(ty);
     if (!canPlaceTree(px, py, 12)) continue;
@@ -259,9 +259,9 @@ export function generateMap() {
   }
 
   let placedTufts = 0;
-  for (let attempt = 0; attempt < 2000 && placedTufts < 80; attempt++) {
-    const tx = 6 + Math.floor(rng() * (MAP_TILES_W - 12));
-    const ty = 6 + Math.floor(rng() * (MAP_TILES_H - 12));
+  for (let attempt = 0; attempt < 1000 && placedTufts < 40; attempt++) {
+    const tx = 4 + Math.floor(rng() * (MAP_TILES_W - 8));
+    const ty = 4 + Math.floor(rng() * (MAP_TILES_H - 8));
     const px = t2p(tx), py = t2p(ty);
     if (!canPlaceTree(px, py, 2)) continue;
     const variant = Math.floor(rng() * 3);
@@ -271,9 +271,9 @@ export function generateMap() {
 
   const FLOWER_SPRITES = ['flower_red', 'flower_yellow', 'flower_blue', 'flower_white', 'flower_purple'];
   let placedFlowers = 0;
-  for (let attempt = 0; attempt < 2200 && placedFlowers < 70; attempt++) {
-    const tx = 6 + Math.floor(rng() * (MAP_TILES_W - 12));
-    const ty = 6 + Math.floor(rng() * (MAP_TILES_H - 12));
+  for (let attempt = 0; attempt < 1200 && placedFlowers < 35; attempt++) {
+    const tx = 4 + Math.floor(rng() * (MAP_TILES_W - 8));
+    const ty = 4 + Math.floor(rng() * (MAP_TILES_H - 8));
     const px = t2p(tx), py = t2p(ty);
     if (!canPlaceTree(px, py, 2)) continue;
     const sprite = FLOWER_SPRITES[Math.floor(rng() * FLOWER_SPRITES.length)];
@@ -282,9 +282,9 @@ export function generateMap() {
   }
 
   let placedGravel = 0;
-  for (let attempt = 0; attempt < 2000 && placedGravel < 48; attempt++) {
-    const tx = 6 + Math.floor(rng() * (MAP_TILES_W - 12));
-    const ty = 6 + Math.floor(rng() * (MAP_TILES_H - 12));
+  for (let attempt = 0; attempt < 1000 && placedGravel < 24; attempt++) {
+    const tx = 4 + Math.floor(rng() * (MAP_TILES_W - 8));
+    const ty = 4 + Math.floor(rng() * (MAP_TILES_H - 8));
     const px = t2p(tx), py = t2p(ty);
     if (!canPlaceTree(px, py, 2)) continue;
     const variant = Math.floor(rng() * 3);
@@ -293,10 +293,10 @@ export function generateMap() {
   }
 
   const rockHotspots = [
-    { tx: 142, ty: 90 }, { tx: 161, ty: 90 }, { tx: 150, ty: 106 }, // pond fringe
-    { tx: 6, ty: 12 }, { tx: 194, ty: 18 }, { tx: 8, ty: 138 }, { tx: 192, ty: 140 }, // corners
-    { tx: 30, ty: 6 }, { tx: 170, ty: 8 }, { tx: 6, ty: 80 }, { tx: 194, ty: 100 },
-    { tx: 60, ty: 145 }, { tx: 120, ty: 146 }, { tx: 196, ty: 60 }, { tx: 4, ty: 50 }, { tx: 100, ty: 4 },
+    { tx: 50, ty: 48 }, { tx: 56, ty: 48 }, { tx: 52, ty: 54 },
+    { tx: 4, ty: 6 }, { tx: 72, ty: 10 }, { tx: 4, ty: 70 }, { tx: 72, ty: 72 },
+    { tx: 14, ty: 4 }, { tx: 64, ty: 4 }, { tx: 4, ty: 40 }, { tx: 72, ty: 50 },
+    { tx: 28, ty: 74 }, { tx: 50, ty: 74 }, { tx: 74, ty: 28 }, { tx: 2, ty: 24 }, { tx: 39, ty: 2 },
   ];
   for (let i = 0; i < rockHotspots.length; i++) {
     const h = rockHotspots[i];
