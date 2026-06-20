@@ -1,0 +1,1065 @@
+/* ===========================================================================
+   PROJECT VEYRA · KINGDOM RPG UI THEME
+   ---------------------------------------------------------------------------
+   Inspirasi: Final Fantasy Tactics, Octopath Traveler, Fire Emblem, Dragon
+   Quest XI — frame emas berhias, perkamen, banner heraldik, orb bermata.
+   Zero external assets — semua ornamen via SVG inline data-URL + CSS.
+=========================================================================== */
+
+:root {
+  /* Palette kerajaan: malam beludru biru tua + emas berkilau + perak permata */
+  --night-1:    #07090F;
+  --night-2:    #0E1424;
+  --night-3:    #182241;
+  --velvet:     #2A1B3D;            /* deep royal purple */
+  --velvet-2:   #1A0F2B;
+  --gold-1:     #F4D17A;            /* lit gilt */
+  --gold-2:     #C99A3D;            /* mid gold */
+  --gold-3:     #8A6520;            /* shadow gold */
+  --gold-glow:  rgba(244,209,122,0.55);
+  --parchment:  #EAD8B0;
+  --parchment-2:#D6BC85;
+  --ink:        #2B1C0A;            /* iron-gall ink */
+  --ruby:       #B5223C;
+  --sapphire:   #2E5BB8;
+  --emerald:    #2F8B5A;
+  --amethyst:   #6B3FA0;
+  --silver:     #C7CBD4;
+  --text:       #F2E9D6;
+  --text-dim:   #B1A07B;
+  --danger:     #E94E4E;
+  --radius:     6px;
+
+  /* Reusable gold gradient (untuk text & garis) */
+  --grad-gold:  linear-gradient(180deg, var(--gold-1) 0%, var(--gold-2) 55%, var(--gold-3) 100%);
+
+  /* Parchment surface */
+  --grad-parchment: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-2) 100%);
+
+  /* Panel velvet surface */
+  --grad-panel: linear-gradient(180deg, rgba(20,26,52,0.96) 0%, rgba(10,12,24,0.98) 100%);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%; height:100%; overflow:hidden; background:#000;
+  color:var(--text);
+  font-family:'Trajan Pro','Cinzel','Cormorant Garamond','Times New Roman',serif;
+  font-size:14px;
+  letter-spacing:0.3px;
+}
+
+/* Body backdrop — kalau canvas belum render, tetap medieval */
+body{
+  background:
+    radial-gradient(ellipse at top, var(--velvet) 0%, var(--night-1) 70%),
+    var(--night-1);
+}
+
+/* ==========================================================================
+   CANVAS
+========================================================================== */
+#game-canvas{ position:fixed; inset:0; z-index:0; image-rendering:pixelated; }
+
+/* ==========================================================================
+   SCREENS (overlay layers — menu, create, loading)
+========================================================================== */
+.screen{
+  position:fixed; inset:0; z-index:100;
+  display:none; align-items:center; justify-content:center; flex-direction:column; gap:18px;
+  background:
+    radial-gradient(ellipse at center, var(--velvet) 0%, var(--night-1) 75%),
+    var(--night-1);
+}
+.screen.show{ display:flex; }
+
+/* Subtle starfield untuk loading/menu */
+.screen::before{
+  content:''; position:absolute; inset:0; pointer-events:none; opacity:0.5;
+  background-image:
+    radial-gradient(1px 1px at 12% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 78% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 55% 72%, #fff, transparent),
+    radial-gradient(1px 1px at 22% 85%, #fff, transparent),
+    radial-gradient(2px 2px at 88% 60%, var(--gold-1), transparent),
+    radial-gradient(1px 1px at 40% 12%, #fff, transparent);
+}
+
+/* ==========================================================================
+   ORNATE FRAME (reusable) — corner fleurs + double border
+   Pakai .ornate-frame untuk panel apapun
+========================================================================== */
+.ornate-frame{
+  position:relative;
+  background:var(--grad-panel);
+  border:2px solid var(--gold-2);
+  border-radius:var(--radius);
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 0 0 3px var(--night-1) inset,
+    0 0 0 4px var(--gold-3) inset,
+    0 0 40px rgba(0,0,0,0.7),
+    0 0 80px rgba(106, 63, 160, 0.15);
+  padding:24px;
+}
+/* Empat ornamen pojok berbentuk fleur-de-lis (SVG inline) */
+.ornate-frame::before,
+.ornate-frame::after,
+.ornate-frame > .corner-tl,
+.ornate-frame > .corner-tr,
+.ornate-frame > .corner-bl,
+.ornate-frame > .corner-br{
+  content:''; position:absolute; width:22px; height:22px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='M11 1 L13 8 L20 9 L14 13 L16 21 L11 17 L6 21 L8 13 L2 9 L9 8 Z' fill='%23F4D17A' stroke='%238A6520' stroke-width='0.5'/></svg>");
+  background-repeat:no-repeat; background-size:contain;
+  pointer-events:none;
+  filter:drop-shadow(0 0 4px var(--gold-glow));
+}
+.ornate-frame::before{ top:-8px; left:-8px; }
+.ornate-frame::after { top:-8px; right:-8px; }
+.ornate-frame > .corner-bl{ bottom:-8px; left:-8px; }
+.ornate-frame > .corner-br{ bottom:-8px; right:-8px; }
+
+/* ==========================================================================
+   HERALDIC BANNER (judul melengkung dengan pita)
+========================================================================== */
+.banner{
+  position:relative; display:inline-block; padding:6px 28px; margin:0 auto 16px;
+  background:var(--grad-gold);
+  color:var(--ink);
+  font-weight:700; letter-spacing:4px; text-transform:uppercase;
+  text-align:center;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 2px 6px rgba(0,0,0,0.5),
+    0 0 18px rgba(244,209,122,0.4);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%, 12px 50%);
+  font-family:'Cinzel','Trajan Pro',serif;
+  text-shadow:0 1px 0 rgba(255,255,255,0.3);
+}
+
+/* ==========================================================================
+   LOADING SCREEN — Crown crest
+========================================================================== */
+#screen-loading .loading-card{ text-align:center; max-width:380px; }
+.crown-crest{
+  width:120px; height:96px; margin:0 auto 14px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'><defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23F4D17A'/><stop offset='100%25' stop-color='%238A6520'/></linearGradient></defs><path d='M10 80 L20 30 L40 55 L60 15 L80 55 L100 30 L110 80 Z' fill='url(%23g)' stroke='%23C99A3D' stroke-width='2'/><circle cx='20' cy='28' r='5' fill='%23B5223C'/><circle cx='60' cy='12' r='6' fill='%232E5BB8'/><circle cx='100' cy='28' r='5' fill='%232F8B5A'/><path d='M10 80 L110 80 L108 90 L12 90 Z' fill='%23C99A3D' stroke='%238A6520' stroke-width='1'/></svg>");
+  background-repeat:no-repeat; background-size:contain;
+  filter:drop-shadow(0 0 20px var(--gold-glow));
+}
+.title-glow{
+  font-family:'Cinzel','Trajan Pro',serif; font-weight:700;
+  font-size:62px; letter-spacing:14px;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 40px rgba(244,209,122,0.4);
+  margin-bottom:6px;
+}
+.subtitle{ color:var(--text-dim); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:20px; }
+.loading-bar{
+  width:280px; height:8px; margin:0 auto;
+  background:var(--night-3); border:1px solid var(--gold-3); border-radius:4px; overflow:hidden;
+  box-shadow:0 0 0 1px var(--night-1) inset;
+}
+.loading-fill{
+  width:30%; height:100%;
+  background:var(--grad-gold);
+  border-radius:3px;
+  box-shadow:0 0 12px var(--gold-glow);
+  animation: load-pulse 1.6s ease-in-out infinite;
+}
+@keyframes load-pulse{ 0%,100%{width:25%} 50%{width:75%} }
+
+/* ==========================================================================
+   MAIN MENU
+========================================================================== */
+.menu-card{
+  background:var(--grad-panel);
+  border:2px solid var(--gold-2);
+  border-radius:var(--radius);
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 0 0 3px var(--night-1) inset,
+    0 0 0 4px var(--gold-3) inset,
+    0 0 60px rgba(106,63,160,0.25),
+    0 20px 60px rgba(0,0,0,0.8);
+  padding:36px 40px 28px;
+  min-width:340px;
+  text-align:center;
+  position:relative;
+}
+.menu-card::before,
+.menu-card::after{
+  content:''; position:absolute; width:26px; height:26px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13 1 L15 9 L24 11 L17 16 L19 25 L13 20 L7 25 L9 16 L2 11 L11 9 Z' fill='%23F4D17A' stroke='%238A6520' stroke-width='0.5'/></svg>");
+  background-repeat:no-repeat; background-size:contain;
+  filter:drop-shadow(0 0 6px var(--gold-glow));
+}
+.menu-card::before{ top:-13px; left:-13px; }
+.menu-card::after { top:-13px; right:-13px; }
+.menu-emblem{
+  width:80px; height:80px; margin:0 auto 8px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23F4D17A'/><stop offset='100%25' stop-color='%238A6520'/></linearGradient></defs><path d='M40 4 L70 18 L70 44 Q70 64 40 76 Q10 64 10 44 L10 18 Z' fill='%232A1B3D' stroke='url(%23s)' stroke-width='3'/><path d='M40 22 L48 38 L40 56 L32 38 Z' fill='url(%23s)'/><circle cx='40' cy='38' r='4' fill='%23B5223C' stroke='%23F4D17A' stroke-width='1'/></svg>");
+  background-repeat:no-repeat; background-size:contain;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+}
+.menu-title{
+  font-family:'Cinzel','Trajan Pro',serif; font-weight:700;
+  font-size:38px; letter-spacing:8px;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:2px;
+}
+.menu-tagline{ color:var(--text-dim); font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; font-style:italic; }
+.menu-footer{ color:var(--gold-3); font-size:10px; letter-spacing:2px; margin-top:22px; }
+
+/* ==========================================================================
+   BUTTONS — Medieval gilded
+========================================================================== */
+.btn{
+  display:block; width:100%;
+  padding:11px 22px;
+  margin-top:10px;
+  border:1px solid var(--gold-3);
+  border-radius:4px;
+  background:
+    linear-gradient(180deg, rgba(244,209,122,0.05), rgba(0,0,0,0.4)),
+    var(--night-2);
+  color:var(--text);
+  font-family:'Cinzel','Trajan Pro',serif;
+  font-size:13px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:
+    0 0 0 1px var(--night-1) inset,
+    0 1px 0 rgba(244,209,122,0.15) inset,
+    0 2px 4px rgba(0,0,0,0.4);
+  transition:all 0.18s ease;
+  position:relative;
+}
+.btn::before,.btn::after{
+  content:'❖';
+  color:var(--gold-3);
+  position:absolute; top:50%; transform:translateY(-50%);
+  font-size:8px; opacity:0.6;
+}
+.btn::before{ left:10px; } .btn::after{ right:10px; }
+.btn:hover{
+  border-color:var(--gold-1);
+  color:var(--gold-1);
+  background:
+    linear-gradient(180deg, rgba(244,209,122,0.15), rgba(106,63,160,0.2)),
+    var(--night-2);
+  box-shadow:
+    0 0 0 1px var(--night-1) inset,
+    0 0 16px rgba(244,209,122,0.3),
+    0 2px 6px rgba(0,0,0,0.4);
+}
+.btn:hover::before,.btn:hover::after{ color:var(--gold-1); opacity:1; }
+.btn.primary{
+  background:
+    linear-gradient(180deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+  color:var(--ink);
+  border-color:var(--gold-3);
+  text-shadow:0 1px 0 rgba(255,255,255,0.3);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.2) inset,
+    0 -2px 4px rgba(0,0,0,0.2) inset,
+    0 0 20px rgba(244,209,122,0.35);
+}
+.btn.primary::before,.btn.primary::after{ color:var(--ink); opacity:0.7; }
+.btn.primary:hover{
+  filter:brightness(1.08);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.3) inset,
+    0 0 28px rgba(244,209,122,0.6);
+}
+.btn.danger{ border-color:var(--ruby); color:var(--ruby); }
+.btn.danger:hover{ background:linear-gradient(180deg, rgba(181,34,60,0.3), rgba(0,0,0,0.4)); color:#fff; }
+.btn.small{ display:inline-block; width:auto; padding:7px 18px; font-size:11px; letter-spacing:2px; }
+
+/* ==========================================================================
+   CHARACTER CREATION
+========================================================================== */
+.create-grid{ display:flex; gap:24px; align-items:stretch; width:min(700px,94vw); }
+.create-preview{
+  flex:0 0 220px;
+  background:var(--grad-panel);
+  border:2px solid var(--gold-2);
+  border-radius:var(--radius);
+  padding:18px 16px;
+  text-align:center;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 0 0 3px var(--night-1) inset,
+    0 0 0 4px var(--gold-3) inset;
+  position:relative;
+}
+.create-preview::before,.create-preview::after{
+  content:''; position:absolute; width:18px; height:18px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'><path d='M9 1 L11 7 L17 8 L12 12 L13 17 L9 14 L5 17 L6 12 L1 8 L7 7 Z' fill='%23F4D17A'/></svg>");
+  background-size:contain; background-repeat:no-repeat;
+}
+.create-preview::before{ top:-9px; left:-9px; }
+.create-preview::after{ top:-9px; right:-9px; }
+.preview-frame{
+  background:
+    radial-gradient(ellipse at center, var(--velvet) 0%, var(--night-1) 80%);
+  border:1px solid var(--gold-3);
+  border-radius:4px;
+  width:192px; height:192px; margin:0 auto 12px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:inset 0 0 30px rgba(0,0,0,0.6);
+}
+.preview-name{
+  font-family:'Cinzel',serif; font-weight:700; font-size:18px;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-top:6px; letter-spacing:2px;
+}
+.preview-class{ color:var(--text-dim); font-size:11px; letter-spacing:2px; text-transform:uppercase; }
+
+.create-form{
+  flex:1;
+  background:var(--grad-panel);
+  border:2px solid var(--gold-2);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 0 0 3px var(--night-1) inset,
+    0 0 0 4px var(--gold-3) inset;
+}
+.create-form label{
+  display:block;
+  color:var(--gold-1);
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  margin:14px 0 6px;
+  font-family:'Cinzel',serif; font-weight:600;
+}
+.create-form label::before{ content:'◆ '; color:var(--gold-3); }
+.create-form input[type=text]{
+  width:100%; padding:10px 12px;
+  background:var(--night-1);
+  border:1px solid var(--gold-3);
+  border-radius:3px;
+  color:var(--gold-1);
+  font-family:'Cinzel',serif; font-size:14px; letter-spacing:1px;
+  box-shadow:inset 0 1px 4px rgba(0,0,0,0.5);
+}
+.create-form input:focus{
+  border-color:var(--gold-1); outline:none;
+  box-shadow:inset 0 1px 4px rgba(0,0,0,0.5), 0 0 8px var(--gold-glow);
+}
+.class-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:6px; }
+.class-btn{
+  padding:9px 8px;
+  background:var(--night-1);
+  border:1px solid var(--gold-3);
+  border-radius:3px;
+  color:var(--text-dim);
+  font-family:'Cinzel',serif; font-size:11px; letter-spacing:1px;
+  cursor:pointer;
+  text-transform:uppercase;
+  transition:0.15s;
+}
+.class-btn.active,.class-btn:hover{
+  border-color:var(--gold-1); color:var(--gold-1);
+  background:linear-gradient(180deg, rgba(244,209,122,0.15), var(--night-1));
+  box-shadow:0 0 8px var(--gold-glow);
+}
+.class-desc{
+  color:var(--parchment-2);
+  font-size:12px; line-height:1.5; margin-top:8px;
+  font-style:italic;
+  padding:8px 10px;
+  background:rgba(0,0,0,0.3);
+  border-left:2px solid var(--gold-2);
+  border-radius:2px;
+}
+.skin-row{ display:flex; gap:8px; }
+.skin-btn{
+  width:38px; height:38px;
+  border:2px solid var(--gold-3); border-radius:50%;
+  background:var(--night-2); color:var(--gold-1);
+  font-size:13px; cursor:pointer;
+  transition:0.15s;
+  box-shadow:inset 0 0 6px rgba(0,0,0,0.5);
+}
+.skin-btn.active{ border-color:var(--gold-1); box-shadow:0 0 12px var(--gold-glow); }
+.create-actions{ display:flex; gap:10px; margin-top:18px; }
+.create-actions .btn{ flex:1; margin-top:0; }
+
+/* ==========================================================================
+   HUD — Royal headpiece dengan jewel orbs
+========================================================================== */
+.hud{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:none; justify-content:space-between; padding:14px 20px;
+  pointer-events:none;
+}
+.hud.show{ display:flex; }
+.hud > *{ pointer-events:auto; }
+
+.hud-left{
+  display:flex; gap:14px; align-items:flex-start;
+  background:var(--grad-panel);
+  border:2px solid var(--gold-2);
+  border-radius:8px;
+  padding:10px 16px 10px 10px;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 4px 16px rgba(0,0,0,0.6);
+  position:relative;
+}
+.hud-left::before{
+  /* Pita kecil diagonal di pojok kiri-atas */
+  content:''; position:absolute; top:-2px; left:-2px;
+  width:20px; height:20px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M0 0 L20 0 L0 20 Z' fill='%23F4D17A'/></svg>");
+  background-size:contain;
+  pointer-events:none;
+}
+
+/* Portrait dengan frame bermata permata */
+.hud-portrait{
+  width:56px; height:56px;
+  border-radius:50%;
+  background:radial-gradient(circle at center, var(--velvet) 0%, var(--night-1) 100%);
+  border:3px solid var(--gold-2);
+  box-shadow:
+    0 0 0 1px var(--gold-3),
+    0 0 12px var(--gold-glow),
+    inset 0 0 8px rgba(0,0,0,0.6);
+  overflow:hidden;
+  flex-shrink:0;
+  position:relative;
+}
+.hud-portrait::after{
+  /* Permata kecil di puncak */
+  content:''; position:absolute; top:-4px; left:50%; transform:translateX(-50%);
+  width:8px; height:8px;
+  background:radial-gradient(circle at 30% 30%, #fff, var(--ruby) 60%, #5a0010 100%);
+  border-radius:50%;
+  border:1px solid var(--gold-2);
+  box-shadow:0 0 6px rgba(181,34,60,0.6);
+}
+
+.hud-info{ display:flex; flex-direction:column; gap:4px; min-width:200px; }
+.hud-row{ display:flex; gap:8px; align-items:center; }
+#hud-name{
+  font-family:'Cinzel',serif; font-weight:700; font-size:15px;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  letter-spacing:2px;
+}
+.hud-pill{
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; font-weight:700;
+  color:var(--ink);
+  background:var(--grad-gold);
+  padding:2px 8px; border-radius:10px;
+  border:1px solid var(--gold-3);
+  box-shadow:0 1px 0 rgba(255,255,255,0.2) inset;
+}
+.hud-class{ font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); font-style:italic; }
+
+/* Royal bars dengan double-edge */
+.hud-bar{
+  position:relative; width:200px; height:14px;
+  background:var(--night-1);
+  border:1px solid var(--gold-3);
+  border-radius:7px;
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+.hud-bar span{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  font-family:'Cinzel',serif; font-size:9px; font-weight:700; letter-spacing:1px;
+  color:#fff; text-shadow:0 0 3px #000, 0 1px 2px #000;
+  z-index:2; white-space:nowrap;
+}
+.hud-bar-fill{
+  height:100%; border-radius:6px; transition:width 0.4s ease;
+  position:relative;
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.4),
+    inset 0 -2px 2px rgba(0,0,0,0.3);
+}
+.hud-bar-fill::after{
+  /* shine */
+  content:''; position:absolute; inset:0 0 50% 0;
+  background:linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+  border-radius:6px 6px 0 0;
+}
+.hud-bar-fill.hp{ background:linear-gradient(180deg, #FF6B6B, #B5223C 60%, #6B0F1F); }
+.hud-bar-fill.mp{ background:linear-gradient(180deg, #6EAFFF, #2E5BB8 60%, #1A3470); }
+.hud-bar-fill.exp{ background:linear-gradient(180deg, #7DDBA5, #2F8B5A 60%, #1A5034); }
+
+/* Sigil di sebelah HUD-right */
+.hud-right{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.hud-gold{
+  font-family:'Cinzel',serif; font-weight:700; font-size:16px;
+  color:var(--ink);
+  background:var(--grad-gold);
+  padding:6px 18px;
+  border:2px solid var(--gold-3);
+  border-radius:6px;
+  letter-spacing:2px;
+  text-shadow:0 1px 0 rgba(255,255,255,0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -2px 4px rgba(0,0,0,0.15),
+    0 4px 8px rgba(0,0,0,0.5),
+    0 0 12px rgba(244,209,122,0.35);
+  position:relative;
+}
+.hud-gold::before{ content:'❦ '; color:var(--ink); }
+.hud-keys{
+  font-family:'Cinzel',serif;
+  font-size:9px; letter-spacing:2px; color:var(--gold-3);
+  text-align:right; text-transform:uppercase;
+  background:rgba(13,18,32,0.7);
+  border:1px solid var(--gold-3);
+  border-radius:4px;
+  padding:6px 12px;
+  backdrop-filter:blur(4px);
+}
+
+/* ==========================================================================
+   PANELS — Royal scroll / framed
+========================================================================== */
+.panel{
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0.94);
+  width:min(520px,94vw); max-height:82vh; overflow-y:auto;
+  background:
+    linear-gradient(180deg, rgba(20,26,52,0.97) 0%, rgba(10,12,24,0.99) 100%);
+  border:2px solid var(--gold-2);
+  border-radius:var(--radius);
+  padding:24px 26px 22px;
+  z-index:200;
+  display:none; opacity:0;
+  transition:opacity 0.22s, transform 0.22s;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 0 0 3px var(--night-1) inset,
+    0 0 0 4px var(--gold-3) inset,
+    0 30px 80px rgba(0,0,0,0.8),
+    0 0 60px rgba(106,63,160,0.2);
+}
+.panel.show{ display:block; opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+/* Sudut fleur */
+.panel::before,
+.panel::after{
+  content:''; position:absolute; width:22px; height:22px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='M11 1 L13 8 L20 9 L14 13 L16 21 L11 17 L6 21 L8 13 L2 9 L9 8 Z' fill='%23F4D17A' stroke='%238A6520' stroke-width='0.5'/></svg>");
+  background-size:contain; background-repeat:no-repeat;
+  filter:drop-shadow(0 0 4px var(--gold-glow));
+  pointer-events:none;
+}
+.panel::before{ top:-11px; left:-11px; }
+.panel::after { top:-11px; right:-11px; }
+
+.panel h2{
+  font-family:'Cinzel','Trajan Pro',serif; font-weight:700;
+  font-size:22px; letter-spacing:5px; text-transform:uppercase;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-align:center;
+  margin:-4px 0 6px;
+  padding-bottom:10px;
+  position:relative;
+}
+.panel h2::after{
+  content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+  width:60%; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold-2) 30%, var(--gold-1) 50%, var(--gold-2) 70%, transparent);
+}
+.panel h3{
+  font-family:'Cinzel',serif; font-weight:600;
+  color:var(--gold-1); font-size:13px; letter-spacing:3px; text-transform:uppercase;
+  margin:18px 0 8px;
+  padding-bottom:4px;
+  border-bottom:1px solid var(--gold-3);
+}
+.panel h3::before{ content:'❖ '; color:var(--gold-2); }
+
+.panel-close{
+  position:absolute; top:8px; right:12px;
+  width:28px; height:28px; padding:0; line-height:24px;
+  font-size:20px; cursor:pointer;
+  color:var(--gold-2);
+  background:var(--night-1);
+  border:1px solid var(--gold-3); border-radius:50%;
+  transition:0.15s;
+  font-family:serif;
+}
+.panel-close:hover{ color:var(--ruby); border-color:var(--ruby); transform:rotate(90deg); }
+
+/* Stats grid */
+.stats{
+  list-style:none;
+  display:grid; grid-template-columns:1fr 1fr; gap:6px 16px;
+  font-size:13px;
+  margin-top:6px;
+}
+.stats li{
+  padding:6px 10px;
+  background:linear-gradient(90deg, rgba(244,209,122,0.08), transparent);
+  border-left:2px solid var(--gold-3);
+  border-radius:0 4px 4px 0;
+  color:var(--parchment);
+  font-family:'Cinzel',serif; font-size:12px; letter-spacing:1px;
+}
+.cls{
+  text-align:center; color:var(--gold-1); font-style:italic; letter-spacing:2px;
+  font-size:12px; text-transform:uppercase; margin-bottom:10px;
+}
+
+/* Skill list */
+.skills{ list-style:none; }
+.skills li{
+  padding:8px 12px; margin:4px 0;
+  background:linear-gradient(90deg, rgba(106,63,160,0.15), rgba(0,0,0,0.3));
+  border:1px solid var(--gold-3); border-left:3px solid var(--gold-1);
+  border-radius:4px;
+  font-size:12px; color:var(--parchment);
+}
+.skills li b{ color:var(--gold-1); font-family:'Cinzel',serif; letter-spacing:1px; }
+
+/* Inventory grid */
+.inv-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px;
+  margin-top:8px;
+}
+.inv-slot{
+  background:radial-gradient(ellipse at top, var(--night-3), var(--night-1));
+  border:1px solid var(--gold-3); border-radius:5px;
+  padding:10px 8px;
+  text-align:center;
+  position:relative;
+  box-shadow:inset 0 0 8px rgba(0,0,0,0.5);
+  transition:0.15s;
+}
+.inv-slot:hover{ border-color:var(--gold-1); box-shadow:inset 0 0 8px rgba(0,0,0,0.5), 0 0 8px var(--gold-glow); }
+.inv-name{ font-size:11px; color:var(--parchment); font-family:'Cinzel',serif; letter-spacing:0.5px; }
+.inv-qty{
+  font-size:11px; color:var(--ink); font-weight:700;
+  background:var(--grad-gold);
+  position:absolute; top:-4px; right:-4px;
+  padding:2px 6px; border-radius:8px;
+  border:1px solid var(--gold-3);
+}
+
+/* Quest cards — parchment look */
+.quest-card{
+  background:var(--grad-parchment);
+  color:var(--ink);
+  border:1px solid var(--gold-3);
+  border-radius:5px;
+  padding:12px 14px;
+  margin:8px 0;
+  font-family:'Cormorant Garamond','Times New Roman',serif;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.4),
+    inset 0 0 20px rgba(106,63,160,0.05);
+  position:relative;
+}
+.quest-card::before{
+  /* wax seal */
+  content:'⚜'; position:absolute; top:8px; right:10px;
+  width:22px; height:22px; line-height:22px; text-align:center;
+  background:radial-gradient(circle at 30% 30%, #d04040, var(--ruby) 60%, #5a0010);
+  color:var(--gold-1); font-size:14px;
+  border-radius:50%;
+  border:1px solid var(--gold-3);
+  box-shadow:0 1px 3px rgba(0,0,0,0.5);
+}
+.quest-card b{ color:var(--ruby); font-family:'Cinzel',serif; font-size:14px; letter-spacing:1px; display:block; margin-bottom:4px; padding-right:30px; }
+.quest-card p{ font-size:13px; line-height:1.5; color:var(--ink); }
+
+/* Soul bond cards — gem look */
+.bond-card{
+  background:linear-gradient(135deg, rgba(107,63,160,0.25), rgba(46,91,184,0.15));
+  border:1px solid var(--gold-3); border-left:3px solid var(--amethyst);
+  border-radius:5px;
+  padding:12px 14px;
+  margin:8px 0;
+  position:relative;
+}
+.bond-card::after{
+  content:'✦'; position:absolute; top:10px; right:14px;
+  color:var(--gold-1); font-size:16px;
+  text-shadow:0 0 8px var(--gold-glow);
+}
+.bond-card b{ color:var(--gold-1); font-family:'Cinzel',serif; font-size:15px; letter-spacing:2px; }
+.bond-card i{ color:var(--amethyst); font-size:11px; letter-spacing:1px; text-transform:uppercase; display:block; margin-top:2px; }
+.bond-card p{ font-size:12px; color:var(--parchment-2); margin-top:6px; line-height:1.5; font-style:italic; }
+
+/* ==========================================================================
+   DIALOGUE — Royal letter
+========================================================================== */
+.dialogue{
+  position:fixed; bottom:0; left:0; right:0; z-index:150;
+  display:none;
+  padding:18px 24px 22px;
+  background:
+    linear-gradient(0deg, rgba(7,9,15,0.98) 0%, rgba(7,9,15,0.92) 70%, transparent 100%);
+}
+.dialogue.show{ display:flex; gap:18px; align-items:flex-start; }
+
+.dlg-portrait{
+  width:96px; height:96px;
+  border:3px solid var(--gold-2);
+  border-radius:50%;
+  overflow:hidden;
+  background:radial-gradient(circle, var(--velvet), var(--night-1));
+  flex-shrink:0;
+  box-shadow:
+    0 0 0 1px var(--gold-3),
+    0 0 16px var(--gold-glow),
+    0 4px 12px rgba(0,0,0,0.7),
+    inset 0 0 8px rgba(0,0,0,0.6);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.dlg-portrait::before{
+  /* mahkota mini di atas */
+  content:''; position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+  width:32px; height:18px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 18'><path d='M2 16 L6 4 L11 11 L16 2 L21 11 L26 4 L30 16 Z' fill='%23F4D17A' stroke='%238A6520' stroke-width='0.5'/><circle cx='16' cy='6' r='2' fill='%23B5223C'/></svg>");
+  background-size:contain; background-repeat:no-repeat;
+  filter:drop-shadow(0 0 4px var(--gold-glow));
+}
+.dlg-portrait img{ image-rendering:pixelated; }
+
+.dlg-body{
+  flex:1;
+  background:var(--grad-parchment);
+  color:var(--ink);
+  border:2px solid var(--gold-2);
+  border-radius:6px;
+  padding:14px 18px 12px;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 6px 18px rgba(0,0,0,0.6);
+  font-family:'Cormorant Garamond','Times New Roman',serif;
+  position:relative;
+}
+.dlg-body::before{
+  /* tail pointing to portrait */
+  content:''; position:absolute; left:-10px; top:30px;
+  width:0; height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:10px solid var(--gold-2);
+}
+.dlg-header{
+  display:flex; gap:12px; align-items:baseline;
+  border-bottom:1px solid rgba(138,101,32,0.4);
+  padding-bottom:6px; margin-bottom:8px;
+}
+.dlg-name{
+  font-family:'Cinzel',serif; font-weight:700; font-size:17px;
+  color:var(--ruby); letter-spacing:2px;
+  text-shadow:0 1px 0 rgba(255,255,255,0.3);
+}
+.dlg-role{
+  font-size:11px; color:var(--gold-3); font-style:italic; letter-spacing:1px; text-transform:uppercase;
+}
+.dlg-text{
+  font-size:15px; line-height:1.55;
+  color:var(--ink);
+  min-height:40px;
+  font-style:italic;
+}
+.dlg-input-row{ display:flex; gap:8px; margin-top:10px; }
+.dlg-input-row input{
+  flex:1; padding:8px 12px;
+  background:rgba(13,18,32,0.9);
+  border:1px solid var(--gold-3); border-radius:4px;
+  color:var(--gold-1);
+  font-family:'Cinzel',serif; font-size:13px;
+}
+.dlg-input-row input:focus{ border-color:var(--gold-1); outline:none; box-shadow:0 0 6px var(--gold-glow); }
+.dlg-actions{ display:flex; gap:8px; margin-top:8px; justify-content:flex-end; }
+
+/* ==========================================================================
+   PROXIMITY HINT
+========================================================================== */
+#prox-hint{
+  position:fixed; left:50%; bottom:22%; transform:translateX(-50%);
+  background:var(--grad-panel);
+  border:1px solid var(--gold-2); border-radius:6px;
+  padding:8px 18px;
+  color:var(--gold-1);
+  font-family:'Cinzel',serif; font-size:12px; letter-spacing:2px; text-transform:uppercase;
+  z-index:50; display:none;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 4px 14px rgba(0,0,0,0.6),
+    0 0 16px var(--gold-glow);
+}
+
+/* ==========================================================================
+   TOAST + ZONE BANNER
+========================================================================== */
+#toast-layer{
+  position:fixed; top:90px; right:24px; z-index:300;
+  display:flex; flex-direction:column; gap:8px; pointer-events:none;
+}
+.toast{
+  background:var(--grad-panel);
+  border:1px solid var(--gold-2);
+  border-left:4px solid var(--gold-1);
+  border-radius:4px;
+  padding:10px 18px;
+  color:var(--parchment);
+  font-family:'Cinzel',serif; font-size:12px; letter-spacing:1px;
+  box-shadow:
+    0 0 0 1px var(--gold-3) inset,
+    0 4px 12px rgba(0,0,0,0.6);
+  animation:toast-in 0.35s;
+  pointer-events:auto;
+}
+.toast.fade{ opacity:0; transform:translateX(40px); transition:0.45s; }
+@keyframes toast-in{ from{opacity:0;transform:translateX(50px)} to{opacity:1;transform:none} }
+
+#zone-banner{
+  position:fixed; top:18%; left:50%; transform:translateX(-50%);
+  z-index:250;
+  font-family:'Cinzel','Trajan Pro',serif; font-weight:700;
+  font-size:36px; letter-spacing:8px; text-transform:uppercase;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 4px 30px rgba(244,209,122,0.4);
+  opacity:0; transition:opacity 0.7s;
+  pointer-events:none;
+  white-space:nowrap;
+  padding:10px 40px;
+}
+#zone-banner::before,#zone-banner::after{
+  content:'❦';
+  color:var(--gold-1);
+  font-size:24px; position:absolute; top:50%; transform:translateY(-50%);
+  -webkit-text-fill-color:var(--gold-1);
+  text-shadow:0 0 12px var(--gold-glow);
+}
+#zone-banner::before{ left:0; }
+#zone-banner::after{ right:0; }
+#zone-banner.show{ opacity:1; }
+
+/* ==========================================================================
+   SLEEP OVERLAY
+========================================================================== */
+.sleep-overlay{
+  position:fixed; inset:0; z-index:400;
+  background:rgba(0,0,0,0);
+  display:none; align-items:center; justify-content:center;
+  transition:background 0.8s;
+}
+.sleep-overlay.show{ display:flex; background:rgba(0,0,0,0.92); }
+.sleep-text{
+  font-family:'Cinzel',serif; font-weight:200;
+  background:var(--grad-gold);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  font-size:54px; letter-spacing:14px;
+  animation:sleep-bob 1.4s ease-in-out infinite alternate;
+  text-shadow:0 0 40px var(--gold-glow);
+}
+@keyframes sleep-bob{
+  from{opacity:0.4; transform:translateY(10px)}
+  to  {opacity:1;   transform:translateY(-10px)}
+}
+
+/* ==========================================================================
+   SCROLLBAR (panels)
+========================================================================== */
+.panel::-webkit-scrollbar{ width:8px; }
+.panel::-webkit-scrollbar-track{ background:var(--night-1); border-radius:4px; }
+.panel::-webkit-scrollbar-thumb{
+  background:var(--grad-gold); border-radius:4px;
+  border:1px solid var(--gold-3);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+========================================================================== */
+@media(max-width:680px){
+  .create-grid{ flex-direction:column; }
+  .create-preview{ flex:initial; }
+  .hud-bar{ width:140px; }
+  .hud-keys{ display:none; }
+  .title-glow{ font-size:42px; letter-spacing:8px; }
+  .menu-title{ font-size:28px; letter-spacing:5px; }
+  #zone-banner{ font-size:24px; letter-spacing:5px; padding:8px 28px; }
+}
+
+/* ===========================================================================
+   MapView overlay — fullscreen world map opened from circular minimap.
+   =========================================================================== */
+
+.mapview-overlay{
+  position:fixed; inset:0; z-index:9000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:0; transition:opacity .2s ease;
+  pointer-events:none;
+}
+.mapview-overlay.show{ opacity:1; pointer-events:all; }
+.mapview-backdrop{
+  position:absolute; inset:0; background:rgba(5,8,12,0.88);
+}
+.mapview-frame{
+  position:relative; z-index:1;
+  width:92vw; height:88vh; max-width:1100px; max-height:720px;
+  display:flex; flex-direction:column;
+  background:linear-gradient(150deg,#12180f 0%,#1a2218 60%,#0f130d 100%);
+  border:2px solid #c9a043; border-radius:14px;
+  box-shadow:0 0 60px rgba(201,160,67,0.18), inset 0 0 40px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+.mapview-header{
+  flex-shrink:0; text-align:center; padding:12px 16px 8px;
+  background:linear-gradient(180deg,rgba(20,28,16,0.9),rgba(20,28,16,0));
+  border-bottom:1px solid rgba(201,160,67,0.2);
+  position:relative;
+}
+.mapview-header h2{
+  margin:0; font:bold 18px/1.2 'Press Start 2P','Segoe UI',monospace;
+  letter-spacing:5px; color:#ffd76b;
+  text-shadow:0 0 16px rgba(255,215,107,0.3);
+}
+.mapview-subtitle{
+  font:11px/1 'Press Start 2P',monospace; color:#8a7944; letter-spacing:3px;
+  margin-top:4px;
+}
+.mapview-close{
+  position:absolute; top:8px; right:12px;
+  background:none; border:1px solid #c9a043; color:#c9a043;
+  border-radius:50%; width:30px; height:30px;
+  font:bold 14px/1 sans-serif; cursor:pointer;
+  transition:all .15s;
+}
+.mapview-close:hover{ background:#c9a043; color:#0f130d; }
+
+/* Viewport — scrollable pan/zoom area */
+.mapview-viewport{
+  flex:1; position:relative; overflow:hidden;
+  cursor:grab;
+}
+.mapview-viewport.dragging{ cursor:grabbing; }
+.mapview-stage{
+  position:absolute; left:50%; top:50%;
+  transform-origin:0 0;
+  transition:none; /* managed by JS */
+  /* Stage is positioned so its center is at the viewport center. */
+}
+.mapview-bg{
+  display:block; width:720px; height:auto; /* constrained in stage; keep aspect */
+  transform:translate(-50%,-50%);
+  image-rendering:auto;
+  user-select:none;
+  pointer-events:none;
+  border-radius:6px;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
+}
+
+/* Zone markers */
+.mapview-marker{
+  position:absolute; transform:translate(-50%,-50%);
+  background:none; border:none; padding:0; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center;
+  z-index:2;
+}
+.mapview-marker-dot{
+  width:12px; height:12px; border-radius:50%;
+  background:var(--kind-color,#fff);
+  border:2px solid rgba(0,0,0,0.7);
+  box-shadow:0 0 8px var(--kind-color), 0 0 2px rgba(0,0,0,0.6);
+  animation:mappin-pulse 1.8s infinite ease-in-out;
+}
+@keyframes mappin-pulse{
+  0%,100%{ box-shadow:0 0 6px var(--kind-color); transform:scale(1); }
+  50%{ box-shadow:0 0 14px var(--kind-color); transform:scale(1.15); }
+}
+.mapview-marker-label{
+  margin-top:4px;
+  font:bold 7px/1 'Press Start 2P',monospace;
+  color:var(--kind-color,#fff);
+  text-shadow:0 1px 3px rgba(0,0,0,0.9);
+  white-space:nowrap;
+}
+.mapview-marker:hover .mapview-marker-dot{
+  transform:scale(1.5); box-shadow:0 0 18px var(--kind-color);
+}
+.mapview-marker:hover .mapview-marker-label{
+  color:#fff;
+}
+
+/* Player pin */
+.mapview-player{
+  position:absolute; transform:translate(-50%,-50%);
+  display:flex; flex-direction:column; align-items:center;
+  pointer-events:none; z-index:3;
+}
+.mapview-player-pulse{
+  width:22px; height:22px; border-radius:50%;
+  background:rgba(255,224,64,0.25);
+  animation:mapplayer-pulse 1.2s infinite ease-in-out;
+}
+@keyframes mapplayer-pulse{
+  0%,100%{ transform:scale(0.8); opacity:0.6; }
+  50%{ transform:scale(1.5); opacity:0.15; }
+}
+.mapview-player-pin{
+  position:absolute; top:2px; font-size:14px; color:#ffe040;
+  text-shadow:0 0 6px rgba(255,224,64,0.6);
+}
+.mapview-player-label{
+  margin-top:16px;
+  font:bold 7px/1 'Press Start 2P',monospace;
+  color:#ffe040; text-shadow:0 1px 4px rgba(0,0,0,0.9);
+  white-space:nowrap;
+}
+
+/* Tooltip */
+.mapview-tooltip{
+  position:absolute; bottom:60px; left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:rgba(10,14,10,0.92); border:1px solid #c9a043;
+  border-radius:8px; padding:10px 18px; text-align:center;
+  pointer-events:none; opacity:0;
+  transition:opacity .2s, transform .2s;
+  max-width:320px;
+}
+.mapview-tooltip.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+.mapview-tip-name{ font:bold 10px/1.4 'Press Start 2P',monospace; }
+.mapview-tip-kind{ font:8px/1 monospace; color:#8a8a8a; letter-spacing:3px; margin:4px 0 6px; }
+.mapview-tip-desc{ font:11px/1.5 sans-serif; color:#bbb; }
+
+/* Controls bar */
+.mapview-controls{
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  gap:8px; padding:8px 16px;
+  background:linear-gradient(0deg,rgba(20,28,16,0.9),rgba(20,28,16,0));
+  border-top:1px solid rgba(201,160,67,0.15);
+}
+.mapview-btn{
+  background:rgba(201,160,67,0.15); border:1px solid #c9a043; color:#ffd76b;
+  border-radius:6px; width:32px; height:28px;
+  font:bold 16px/1 sans-serif; cursor:pointer;
+  transition:all .12s;
+}
+.mapview-btn:hover{ background:#c9a043; color:#0f130d; }
+.mapview-zoom-readout{
+  font:8px/1 'Press Start 2P',monospace; color:#8a7944;
+  min-width:48px; text-align:center;
+}
+.mapview-hint{
+  margin-left:12px; font:9px/1 sans-serif; color:#666;
+}
+

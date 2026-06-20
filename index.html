@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Veyra · Lunaris Village</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.screen { display:none; position:fixed; inset:0; z-index:10; }
+.screen.show { display:flex; align-items:center; justify-content:center; }
+.auth-overlay { background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); }
+.auth-card {
+  background: linear-gradient(135deg, #1a1025 0%, #0d0a1a 100%);
+  border: 1px solid #3d2a5c; border-radius: 16px;
+  padding: 40px 36px; width: 380px; max-width: 90vw;
+  text-align: center; box-shadow: 0 0 40px rgba(124,58,237,0.15);
+}
+.auth-card h1 { font-family: 'Cinzel', serif; color: #d4a853; font-size: 28px; margin-bottom: 4px; }
+.auth-card .sub { color: #8a7a6a; font-size: 12px; letter-spacing: 2px; margin-bottom: 28px; }
+.auth-card label { display:block; text-align:left; color:#b0a090; font-size:11px; letter-spacing:1px; margin-bottom:4px; margin-top:14px; }
+.auth-card input {
+  width:100%; padding:10px 14px; background:#0d0a14; border:1px solid #2a1f3d;
+  border-radius:8px; color:#e0d0c0; font-size:14px; outline:none; box-sizing:border-box;
+}
+.auth-card input:focus { border-color:#7c3aed; }
+.auth-card .btn {
+  width:100%; padding:12px; margin-top:20px; border:none; border-radius:8px;
+  font-size:14px; font-weight:600; cursor:pointer; letter-spacing:1px;
+}
+.auth-card .btn.primary { background:linear-gradient(135deg,#7c3aed,#a855f7); color:#fff; }
+.auth-card .btn.primary:hover { filter:brightness(1.1); }
+.auth-card .btn.secondary { background:transparent; border:1px solid #3d2a5c; color:#b0a090; margin-top:10px; }
+.auth-card .btn.secondary:hover { border-color:#7c3aed; color:#d4a853; }
+.auth-card .error { color:#ef4444; font-size:12px; margin-top:8px; min-height:16px; }
+.auth-card .toggle { color:#7c3aed; cursor:pointer; font-size:12px; margin-top:16px; display:inline-block; }
+.auth-card .toggle:hover { text-decoration:underline; }
+.create-auth { display:none; }
+.create-auth.show { display:block; }
+</style>
+</head>
+<body>
+
+<canvas id="game-canvas"></canvas>
+
+<!-- Loading -->
+<div id="screen-loading" class="screen show">
+  <div class="loading-card">
+    <div class="crown-crest"></div>
+    <h1 class="title-glow">VEYRA</h1>
+    <p class="subtitle">Realm of the Soulbond</p>
+    <div class="loading-bar"><div class="loading-fill"></div></div>
+    <p class="subtitle" style="margin-top:14px;font-size:11px;letter-spacing:2px;color:#8A6520">Awakening Lunaris Village...</p>
+  </div>
+</div>
+
+<!-- Auth: Login -->
+<div id="screen-auth-login" class="screen auth-overlay">
+  <div class="auth-card">
+    <h1>VEYRA</h1>
+    <p class="sub">REALM OF THE SOULBOND</p>
+    <label>Username or Email</label>
+    <input type="text" id="auth-login-user" placeholder="username or email" autocomplete="username">
+    <label>Password</label>
+    <input type="password" id="auth-login-pass" placeholder="password" autocomplete="current-password">
+    <div class="error" id="auth-login-error"></div>
+    <button class="btn primary" id="btn-auth-login">Enter Veyra</button>
+    <span class="toggle" id="btn-show-register">New traveler? Register here</span>
+  </div>
+</div>
+
+<!-- Auth: Register -->
+<div id="screen-auth-register" class="screen auth-overlay">
+  <div class="auth-card">
+    <h1>VEYRA</h1>
+    <p class="sub">CREATE YOUR ACCOUNT</p>
+    <label>Username</label>
+    <input type="text" id="auth-reg-user" placeholder="username" autocomplete="username">
+    <label>Email</label>
+    <input type="email" id="auth-reg-email" placeholder="email" autocomplete="email">
+    <label>Password</label>
+    <input type="password" id="auth-reg-pass" placeholder="min 6 characters" autocomplete="new-password">
+    <div class="error" id="auth-reg-error"></div>
+    <button class="btn primary" id="btn-auth-register">Register</button>
+    <span class="toggle" id="btn-show-login">Already have an account? Login</span>
+  </div>
+</div>
+
+<!-- Menu (filled by ui.js) -->
+<div id="screen-menu" class="screen"></div>
+
+<!-- Character creation (filled by ui.js) -->
+<div id="screen-create" class="screen"></div>
+
+<!-- HUD -->
+<div id="hud" class="hud">
+  <div class="hud-left">
+    <div class="hud-portrait"></div>
+    <div class="hud-info">
+      <div class="hud-row"><span id="hud-name">--</span> <span class="hud-pill" id="hud-lv">Lv 1</span></div>
+      <div class="hud-class" id="hud-class">--</div>
+      <div class="hud-bar"><div class="hud-bar-fill hp" id="hud-hp-bar"></div><span id="hud-hp-txt">100/100</span></div>
+      <div class="hud-bar"><div class="hud-bar-fill mp" id="hud-mp-bar"></div><span id="hud-mp-txt">50/50</span></div>
+      <div class="hud-bar"><div class="hud-bar-fill exp" id="hud-exp-bar"></div><span id="hud-exp-txt">0 EXP</span></div>
+    </div>
+  </div>
+  <div class="hud-right">
+    <div class="hud-gold" id="hud-gold">0</div>
+    <div class="hud-keys">[I] Tas &middot; [C] Karakter &middot; [Q] Quest &middot; [M] Soulbond &middot; [N] Map &middot; [E] Interaksi</div>
+  </div>
+</div>
+
+<div id="panel-layer"></div>
+<div id="zone-banner"></div>
+<div id="toast-layer"></div>
+
+<script type="module" src="js/main.js?v=1"></script>
+</body>
+</html>

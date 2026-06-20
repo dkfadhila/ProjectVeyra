@@ -1,0 +1,20 @@
+{
+  "name": "new-project-veyra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node --watch server/index.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "openai": "^4.28.0",
+    "socket.io": "^4.7.4",
+    "uuid": "^9.0.0"
+  }
+}
