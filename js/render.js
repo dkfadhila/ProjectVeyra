@@ -123,15 +123,16 @@ export async function initRenderer(canvas) {
 
 
 
+const CAMERA_ZOOM = 2;
+
 function computeCamera(state) {
-  const cw = _canvas.width;
-  const ch = _canvas.height;
+  const cw = _canvas.width / CAMERA_ZOOM;
+  const ch = _canvas.height / CAMERA_ZOOM;
   const px = state.player ? state.player.x : WORLD_W / 2;
   const py = state.player ? state.player.y : WORLD_H / 2;
 
   let camX = px - cw / 2;
   let camY = py - ch / 2;
-
 
   camX = Math.max(0, Math.min(camX, WORLD_W - cw));
   camY = Math.max(0, Math.min(camY, WORLD_H - ch));
@@ -841,8 +842,8 @@ function drawVignette(ctx) {
 
 
 function renderInterior(ctx, state, t) {
-  const cw = _canvas.width;
-  const ch = _canvas.height;
+  const cw = _canvas.width / CAMERA_ZOOM;
+  const ch = _canvas.height / CAMERA_ZOOM;
   const interior = (INTERIORS && INTERIORS[state.interior]) || { w: cw, h: ch, furniture: [], exit: null };
 
 
@@ -852,6 +853,9 @@ function renderInterior(ctx, state, t) {
   let camY = (state.player ? state.player.y : ih / 2) - ch / 2;
   camX = Math.max(0, Math.min(camX, Math.max(0, iw - cw)));
   camY = Math.max(0, Math.min(camY, Math.max(0, ih - ch)));
+
+  ctx.save();
+  ctx.scale(CAMERA_ZOOM, CAMERA_ZOOM);
 
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, cw, ch);
@@ -910,6 +914,8 @@ function renderInterior(ctx, state, t) {
     ctx.restore();
   }
 
+  ctx.restore();
+
   drawVignette(ctx);
   drawMinimap(ctx, state);
 }
@@ -933,6 +939,8 @@ export function renderFrame(state) {
 
   const { camX, camY } = computeCamera(state);
 
+  ctx.save();
+  ctx.scale(CAMERA_ZOOM, CAMERA_ZOOM);
 
   drawGroundBackground(ctx, state, camX, camY);
   drawPaths(ctx, state, camX, camY);
@@ -940,9 +948,7 @@ export function renderFrame(state) {
   drawFarms(ctx, state, camX, camY);
   drawFences(ctx, state, camX, camY);
 
-  // 6: flat ground decorations (gravel, grass tufts, flowers — below y-sorted entities).
   drawDecorations(ctx, state, camX, camY, t);
-
 
   const ents = collectEntities(state);
   for (const e of ents) {
@@ -957,8 +963,10 @@ export function renderFrame(state) {
     }
   }
 
-
   drawRoofOverlays(ctx, state, camX, camY);
+
+  ctx.restore();
+
   drawVignette(ctx);
   drawMinimap(ctx, state);
 }

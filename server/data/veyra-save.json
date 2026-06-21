@@ -1,8 +1,8 @@
 {
   "players": {
-    "a5ff1b3f-4908-415a-8a48-a06b829a5033": {
-      "id": "a5ff1b3f-4908-415a-8a48-a06b829a5033",
-      "name": "TirtaHero",
+    "cd6cb778-8c51-4066-8258-f6e96ff224e8": {
+      "id": "cd6cb778-8c51-4066-8258-f6e96ff224e8",
+      "name": "Wanderer",
       "class": "knight",
       "level": 1,
       "exp": 0,
@@ -17,8 +17,8 @@
       "vs": 0,
       "veyA": 0,
       "position": {
-        "x": 512,
-        "y": 512
+        "x": 400,
+        "y": 300
       },
       "zone": "lunaris_village",
       "inventory": [],
@@ -43,75 +43,43 @@
         "shoesStyle": "boots",
         "shoesColor": "brown"
       },
-      "userId": "8576007c-b6ba-49e0-8e00-0da29b19fc17",
-      "createdAt": 1781982187460,
-      "lastActive": 1781982187472
+      "userId": "6fb7eb27-364e-4f4e-ad63-7aade98837ed",
+      "createdAt": 1782015284978,
+      "lastActive": 1782015284978
     }
   },
   "users": {
-    "6bb6a135-daad-4f0d-825c-6a33c5349037": {
-      "id": "6bb6a135-daad-4f0d-825c-6a33c5349037",
-      "username": "testplayer",
-      "email": "test@example.com",
-      "createdAt": 1781981768074
-    },
-    "8576007c-b6ba-49e0-8e00-0da29b19fc17": {
-      "id": "8576007c-b6ba-49e0-8e00-0da29b19fc17",
+    "6fb7eb27-364e-4f4e-ad63-7aade98837ed": {
+      "id": "6fb7eb27-364e-4f4e-ad63-7aade98837ed",
       "username": "tirta",
-      "email": "tirta@veyra.com",
-      "createdAt": 1781982054329
+      "email": "tirta@test.com",
+      "createdAt": 1781989177654
     }
   },
   "passwords": {
-    "testplayer": {
-      "hash": "$2b$10$tVqJrW6iDGyx/.QZVRaxJ.9agTRfEjsYInVvOFr/38CO7RmCrl/m6",
-      "userId": "6bb6a135-daad-4f0d-825c-6a33c5349037"
-    },
-    "test@example.com": {
-      "hash": "$2b$10$tVqJrW6iDGyx/.QZVRaxJ.9agTRfEjsYInVvOFr/38CO7RmCrl/m6",
-      "userId": "6bb6a135-daad-4f0d-825c-6a33c5349037"
-    },
     "tirta": {
-      "hash": "$2b$10$cMoRMzfSU5sTMbGnRlrTDu9QN09.mT5M/cK1sbSeORca3aYsL0Ewm",
-      "userId": "8576007c-b6ba-49e0-8e00-0da29b19fc17"
+      "hash": "$2b$10$yDtYm4MjgPWC29LjVigkZOHqs7pqWsw/.sNuj41YpwpfV5EU./Tya",
+      "userId": "6fb7eb27-364e-4f4e-ad63-7aade98837ed"
     },
-    "tirta@veyra.com": {
-      "hash": "$2b$10$cMoRMzfSU5sTMbGnRlrTDu9QN09.mT5M/cK1sbSeORca3aYsL0Ewm",
-      "userId": "8576007c-b6ba-49e0-8e00-0da29b19fc17"
+    "tirta@test.com": {
+      "hash": "$2b$10$yDtYm4MjgPWC29LjVigkZOHqs7pqWsw/.sNuj41YpwpfV5EU./Tya",
+      "userId": "6fb7eb27-364e-4f4e-ad63-7aade98837ed"
     }
   },
   "playerQuests": {
-    "a5ff1b3f-4908-415a-8a48-a06b829a5033": []
+    "cd6cb778-8c51-4066-8258-f6e96ff224e8": []
   },
   "marketListings": {},
-  "lyraMemory": {
-    "a5ff1b3f-4908-415a-8a48-a06b829a5033": {
-      "playerId": "a5ff1b3f-4908-415a-8a48-a06b829a5033",
-      "conversations": [
-        {
-          "timestamp": 1781982191256,
-          "playerMessage": "Hello Lyra!",
-          "lyraResponse": "The wind carries no answer... Perhaps try again?",
-          "resonanceChange": 0,
-          "context": "error"
-        }
-      ],
-      "gifts": [],
-      "resonanceEvents": [],
-      "lastInteraction": 1781982191256,
-      "totalInteractions": 1,
-      "playerNotes": ""
-    }
-  },
+  "lyraMemory": {},
   "maidenInventories": {},
   "chronicle": [
     {
-      "playerId": "a5ff1b3f-4908-415a-8a48-a06b829a5033",
-      "playerName": "TirtaHero",
+      "playerId": "cd6cb778-8c51-4066-8258-f6e96ff224e8",
+      "playerName": "Wanderer",
       "type": "player_join",
-      "description": "TirtaHero the knight has arrived in Veyra!",
-      "id": "5328a932-7d3d-432e-ad89-5aac1c51ec1b",
-      "timestamp": 1781982187461
+      "description": "Wanderer the knight has arrived in Veyra!",
+      "id": "7394112b-9b6f-4423-b425-7964a4dad49d",
+      "timestamp": 1782015284979
     }
   ]
 }
