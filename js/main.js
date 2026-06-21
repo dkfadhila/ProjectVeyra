@@ -605,39 +605,51 @@ function goCreate() {
 
 
 async function boot() {
-  await bootAssets();
-  setupInput();
-  setupAuthUI();
+  try {
+    await bootAssets();
+    setupInput();
+    setupAuthUI();
 
-  initUI({
-    state,
-    onStartNew: () => { goCreate(); },
-    onLoadSave: () => {
-      const s = load();
-      if (s && s.player) { startGame(s.player); } else { showToast('No save found.'); }
-    },
-    onCreate: async (data) => {
-      try {
-        const cls = CLASSES.find(c => c.id === data.classId);
-        const serverPlayer = await Auth.createCharacter(data.name, data.classId);
-        startGame({
-          ...data,
-          hp: serverPlayer.hp || cls?.baseStats?.hp || 100,
-          maxHp: serverPlayer.maxHp || cls?.baseStats?.hp || 100,
-          mp: serverPlayer.mp || cls?.baseStats?.mp || 50,
-          maxMp: serverPlayer.maxMp || cls?.baseStats?.mp || 50,
-          gold: serverPlayer.gold || 50,
-        });
-      } catch (e) {
-        showToast('Character creation failed: ' + e.message);
+    initUI({
+      state,
+      onStartNew: () => { goCreate(); },
+      onLoadSave: () => {
+        const s = load();
+        if (s && s.player) { startGame(s.player); } else { showToast('No save found.'); }
+      },
+      onCreate: async (data) => {
+        try {
+          const cls = CLASSES.find(c => c.id === data.classId);
+          const serverPlayer = await Auth.createCharacter(data.name, data.classId);
+          startGame({
+            ...data,
+            hp: serverPlayer.hp || cls?.baseStats?.hp || 100,
+            maxHp: serverPlayer.maxHp || cls?.baseStats?.hp || 100,
+            mp: serverPlayer.mp || cls?.baseStats?.mp || 50,
+            maxMp: serverPlayer.maxMp || cls?.baseStats?.mp || 50,
+            gold: serverPlayer.gold || 50,
+          });
+        } catch (e) {
+          showToast('Character creation failed: ' + e.message);
+        }
+      },
+    });
+
+    document.getElementById('screen-loading')?.classList.remove('show');
+
+    try {
+      const authData = await Auth.checkAuth();
+      if (authData) {
+        await postAuthFlow();
+      } else {
+        showAuthScreen('login');
       }
-    },
-  });
-
-  const authData = await Auth.checkAuth();
-  if (authData) {
-    await postAuthFlow();
-  } else {
+    } catch (e) {
+      showAuthScreen('login');
+    }
+  } catch (e) {
+    console.error('[boot] fatal error:', e);
+    document.getElementById('screen-loading')?.classList.remove('show');
     showAuthScreen('login');
   }
 
