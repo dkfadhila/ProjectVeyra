@@ -54,12 +54,12 @@ const BUILDING_SIZE = {
 const isHouse = (id) => /^house\d+|^house_new\d+$/.test(id);
 
 const TOWN_ROWS = [
-  { roadTileY: 45, startX: 22,  gap: 2, ids: ['market', 'inn_basic'] },
-  { roadTileY: 45, startX: 70,  gap: 2, ids: ['inn', 'inn_medium', 'blacksmith'] },
+  { roadTileY: 60, startX: 20,  gap: 2, below: true, ids: ['market', 'inn_basic'] },
+  { roadTileY: 60, startX: 70,  gap: 2, below: true, ids: ['inn', 'inn_medium', 'blacksmith'] },
   { roadTileY: 30, startX: 42,  gap: 2, ids: ['house1', 'house7', 'house_new1'] },
   { roadTileY: 30, startX: 72,  gap: 2, ids: ['house2', 'house8', 'house_new2'] },
-  { roadTileY: 85, startX: 42,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
-  { roadTileY: 85, startX: 76,  gap: 2, ids: ['house10', 'house_new4'] },
+  { roadTileY: 88, startX: 42,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
+  { roadTileY: 88, startX: 76,  gap: 2, ids: ['house10', 'house_new4'] },
 ];
 
 const SOLO_BUILDINGS = [];
@@ -80,10 +80,17 @@ function buildBuildingDefs() {
     const roadPxY = row.roadTileY * TILE_SIZE;
     for (const id of row.ids) {
       const [tw, th] = BUILDING_SIZE[id] || [3, 3];
-      const bottomPx = roadPxY - ROAD_GAP_PX;
-      const topPx = bottomPx - th * TILE_SIZE;
-      const ty = Math.floor(topPx / TILE_SIZE);
-      const offsetY = topPx - ty * TILE_SIZE;
+      let ty, offsetY = 0;
+      if (row.below) {
+        const topPx = roadPxY + (3 * TILE_SIZE) + ROAD_GAP_PX;
+        ty = Math.floor(topPx / TILE_SIZE);
+        offsetY = topPx - ty * TILE_SIZE;
+      } else {
+        const bottomPx = roadPxY - ROAD_GAP_PX;
+        const topPx = bottomPx - th * TILE_SIZE;
+        ty = Math.floor(topPx / TILE_SIZE);
+        offsetY = topPx - ty * TILE_SIZE;
+      }
       add(id, cx, ty, offsetY);
       cx += tw + row.gap;
     }
@@ -95,14 +102,12 @@ function buildBuildingDefs() {
 const BUILDING_DEFS = buildBuildingDefs();
 
 const PATH_DEFS = [
-  { tx: 60, ty: 10, tw: 3, th: 47 },
-  { tx: 60, ty: 68, tw: 3, th: 47 },
-  { tx: 10, ty: 45, tw: 47, th: 3 },
-  { tx: 68, ty: 45, tw: 47, th: 3 },
+  { tx: 60, ty: 10, tw: 3, th: 105 },
+  { tx: 10, ty: 60, tw: 105, th: 3 },
   { tx: 38, ty: 30, tw: 52, th: 2 },
-  { tx: 38, ty: 85, tw: 52, th: 2 },
-  { tx: 38, ty: 30, tw: 2, th: 57 },
-  { tx: 88, ty: 30, tw: 2, th: 57 },
+  { tx: 38, ty: 88, tw: 52, th: 2 },
+  { tx: 38, ty: 30, tw: 2, th: 60 },
+  { tx: 88, ty: 30, tw: 2, th: 60 },
   { tx: PLAZA.x0, ty: PLAZA.y0, tw: PLAZA.x1 - PLAZA.x0, th: PLAZA.y1 - PLAZA.y0 },
 ];
 
