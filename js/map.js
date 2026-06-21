@@ -54,8 +54,8 @@ const BUILDING_SIZE = {
 const isHouse = (id) => /^house\d+|^house_new\d+$/.test(id);
 
 const TOWN_ROWS = [
-  { roadTileY: 60, startX: 20,  gap: 2, below: true, ids: ['market', 'inn_basic'] },
-  { roadTileY: 60, startX: 70,  gap: 2, below: true, ids: ['inn', 'inn_medium', 'blacksmith'] },
+  { roadTileY: 60, startX: 20,  gap: 2, ids: ['market', 'inn_basic'] },
+  { roadTileY: 60, startX: 70,  gap: 2, ids: ['inn', 'inn_medium', 'blacksmith'] },
   { roadTileY: 30, startX: 42,  gap: 2, ids: ['house1', 'house7', 'house_new1'] },
   { roadTileY: 30, startX: 72,  gap: 2, ids: ['house2', 'house8', 'house_new2'] },
   { roadTileY: 88, startX: 42,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
@@ -80,17 +80,10 @@ function buildBuildingDefs() {
     const roadPxY = row.roadTileY * TILE_SIZE;
     for (const id of row.ids) {
       const [tw, th] = BUILDING_SIZE[id] || [3, 3];
-      let ty, offsetY = 0;
-      if (row.below) {
-        const topPx = roadPxY + (3 * TILE_SIZE) + ROAD_GAP_PX;
-        ty = Math.floor(topPx / TILE_SIZE);
-        offsetY = topPx - ty * TILE_SIZE;
-      } else {
-        const bottomPx = roadPxY - ROAD_GAP_PX;
-        const topPx = bottomPx - th * TILE_SIZE;
-        ty = Math.floor(topPx / TILE_SIZE);
-        offsetY = topPx - ty * TILE_SIZE;
-      }
+      const bottomPx = roadPxY - ROAD_GAP_PX;
+      const topPx = bottomPx - th * TILE_SIZE;
+      const ty = Math.floor(topPx / TILE_SIZE);
+      const offsetY = topPx - ty * TILE_SIZE;
       add(id, cx, ty, offsetY);
       cx += tw + row.gap;
     }
@@ -113,8 +106,6 @@ const PATH_DEFS = [
 
 const WATER_DEFS = [];
 
-const FARM_DEF = { tx: 29, ty: 51, tw: 8, th: 12 };
-
 const NPC_PLACEMENTS = [
   { id: 'innkeeper',      sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn'        }, facing: 'down' },
   { id: 'innkeeper_north',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_basic'  }, facing: 'down' },
@@ -122,7 +113,6 @@ const NPC_PLACEMENTS = [
   { id: 'innkeeper_south',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_luxury' }, facing: 'down' },
   { id: 'blacksmith', sprite: 'knight',     anchor: { kind: 'door',  building: 'blacksmith' }, facing: 'down' },
   { id: 'merchant',   sprite: 'shopkeeper', anchor: { kind: 'door',  building: 'market'     }, facing: 'down' },
-  { id: 'farmer',     sprite: 'farmer',     anchor: { kind: 'point', tx: 33, ty: 48 },          facing: 'right' },
   { id: 'professor',  sprite: 'professor',  anchor: { kind: 'point', tx: PLAZA_CX + 4, ty: PLAZA_CY + 1 }, facing: 'left' },
   { id: 'lyra',       sprite: 'lyra',       anchor: { kind: 'point', tx: PLAZA_CX,     ty: PLAZA_CY + 4 }, facing: 'up' },
 ];
@@ -177,12 +167,6 @@ export function generateMap() {
     }
   }
 
-  {
-    const fx = t2p(FARM_DEF.tx), fy = t2p(FARM_DEF.ty);
-    const fw = t2p(FARM_DEF.tw), fh = t2p(FARM_DEF.th);
-    MAP_OBJECTS.push({ type: 'farm', x: fx, y: fy, w: fw, h: fh });
-  }
-
   const buildingRects = {};
   for (const b of BUILDING_DEFS) {
     const rect = { x: t2p(b.tx), y: t2p(b.ty) + (b.offsetY || 0), w: t2p(b.tw), h: t2p(b.th) };
@@ -213,7 +197,6 @@ export function generateMap() {
   const blockedRects = [
     ...PATH_DEFS.map(p => ({ x: t2p(p.tx), y: t2p(p.ty), w: t2p(p.tw), h: t2p(p.th) })),
     ...WATER_DEFS.map(w => ({ x: t2p(w.tx - 1), y: t2p(w.ty - 1), w: t2p(w.tw + 2), h: t2p(w.th + 2) })),
-    { x: t2p(FARM_DEF.tx), y: t2p(FARM_DEF.ty), w: t2p(FARM_DEF.tw), h: t2p(FARM_DEF.th) },
     ...Object.values(buildingRects).map(r => ({ x: r.x - TILE_SIZE, y: r.y - TILE_SIZE, w: r.w + 2 * TILE_SIZE, h: r.h + 2 * TILE_SIZE })),
   ];
 
