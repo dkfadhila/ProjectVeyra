@@ -54,12 +54,12 @@ const BUILDING_SIZE = {
 const isHouse = (id) => /^house\d+|^house_new\d+$/.test(id);
 
 const TOWN_ROWS = [
-  { roadTileY: 59, startX: 45,  gap: 2, ids: ['market', 'inn_basic'] },
-  { roadTileY: 59, startX: 69,  gap: 2, ids: ['inn', 'inn_medium', 'blacksmith'] },
-  { roadTileY: 43, startX: 47,  gap: 2, ids: ['house1', 'house7', 'house_new1'] },
-  { roadTileY: 43, startX: 71,  gap: 2, ids: ['house2', 'house8', 'house_new2'] },
-  { roadTileY: 75, startX: 47,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
-  { roadTileY: 75, startX: 75,  gap: 2, ids: ['house10', 'house_new4'] },
+  { roadTileY: 45, startX: 22,  gap: 2, ids: ['market', 'inn_basic'] },
+  { roadTileY: 45, startX: 70,  gap: 2, ids: ['inn', 'inn_medium', 'blacksmith'] },
+  { roadTileY: 30, startX: 42,  gap: 2, ids: ['house1', 'house7', 'house_new1'] },
+  { roadTileY: 30, startX: 72,  gap: 2, ids: ['house2', 'house8', 'house_new2'] },
+  { roadTileY: 85, startX: 42,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
+  { roadTileY: 85, startX: 76,  gap: 2, ids: ['house10', 'house_new4'] },
 ];
 
 const SOLO_BUILDINGS = [];
@@ -95,12 +95,14 @@ function buildBuildingDefs() {
 const BUILDING_DEFS = buildBuildingDefs();
 
 const PATH_DEFS = [
-  { tx: 61, ty: 25, tw: 3, th: 97 },
-  { tx: 25, ty: 59, tw: 97, th: 3 },
-  { tx: 39, ty: 43, tw: 48, th: 2 },
-  { tx: 39, ty: 75, tw: 48, th: 2 },
-  { tx: 43, ty: 43, tw: 2, th: 34 },
-  { tx: 83, ty: 43, tw: 2, th: 34 },
+  { tx: 60, ty: 10, tw: 3, th: 47 },
+  { tx: 60, ty: 68, tw: 3, th: 47 },
+  { tx: 10, ty: 45, tw: 47, th: 3 },
+  { tx: 68, ty: 45, tw: 47, th: 3 },
+  { tx: 38, ty: 30, tw: 52, th: 2 },
+  { tx: 38, ty: 85, tw: 52, th: 2 },
+  { tx: 38, ty: 30, tw: 2, th: 57 },
+  { tx: 88, ty: 30, tw: 2, th: 57 },
   { tx: PLAZA.x0, ty: PLAZA.y0, tw: PLAZA.x1 - PLAZA.x0, th: PLAZA.y1 - PLAZA.y0 },
 ];
 
@@ -115,7 +117,7 @@ const NPC_PLACEMENTS = [
   { id: 'innkeeper_south',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_luxury' }, facing: 'down' },
   { id: 'blacksmith', sprite: 'knight',     anchor: { kind: 'door',  building: 'blacksmith' }, facing: 'down' },
   { id: 'merchant',   sprite: 'shopkeeper', anchor: { kind: 'door',  building: 'market'     }, facing: 'down' },
-  { id: 'farmer',     sprite: 'farmer',     anchor: { kind: 'point', tx: 33, ty: 55 },          facing: 'right' },
+  { id: 'farmer',     sprite: 'farmer',     anchor: { kind: 'point', tx: 33, ty: 48 },          facing: 'right' },
   { id: 'professor',  sprite: 'professor',  anchor: { kind: 'point', tx: PLAZA_CX + 4, ty: PLAZA_CY + 1 }, facing: 'left' },
   { id: 'lyra',       sprite: 'lyra',       anchor: { kind: 'point', tx: PLAZA_CX,     ty: PLAZA_CY + 4 }, facing: 'up' },
 ];
