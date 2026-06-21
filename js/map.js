@@ -46,6 +46,7 @@ const BUILDING_SIZE = {
   inn:        [5, 7], inn_basic:  [4, 6],
   inn_medium: [4, 4], inn_luxury: [5, 7],
   house_new1: [3, 4], house_new2: [3, 4], house_new3: [3, 4], house_new4: [3, 4],
+  tavern: [5, 7], mercen: [5, 7], bm: [5, 7],
 };
 
 const isHouse = (id) => /^house\d+|^house_new\d+$/.test(id);
@@ -59,7 +60,17 @@ const TOWN_ROWS = [
   { roadTileY: 88, startX: 76,  gap: 2, ids: ['house_new4'] },
 ];
 
-const SOLO_BUILDINGS = [];
+const SOLO_BUILDINGS = [
+  { id: 'tavern', tx: 15, ty: 53 },
+  { id: 'tavern', tx: 85, ty: 23 },
+  { id: 'tavern', tx: 35, ty: 83 },
+  { id: 'mercen', tx: 95, ty: 53 },
+  { id: 'mercen', tx: 20, ty: 23 },
+  { id: 'mercen', tx: 85, ty: 83 },
+  { id: 'bm', tx: 45, ty: 18 },
+  { id: 'bm', tx: 15, ty: 83 },
+  { id: 'bm', tx: 105, ty: 43 },
+];
 
 const ROAD_GAP_PX = 8;
 
@@ -110,6 +121,15 @@ const NPC_PLACEMENTS = [
   { id: 'innkeeper_south',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_luxury' }, facing: 'down' },
   { id: 'professor',  sprite: 'professor',  anchor: { kind: 'point', tx: PLAZA_CX + 4, ty: PLAZA_CY + 1 }, facing: 'left' },
   { id: 'lyra',       sprite: 'lyra',       anchor: { kind: 'point', tx: PLAZA_CX,     ty: PLAZA_CY + 4 }, facing: 'up' },
+  { id: 'merchant1',  sprite: 'mercen',     anchor: { kind: 'point', tx: 97, ty: 55 }, facing: 'down' },
+  { id: 'merchant2',  sprite: 'mercen',     anchor: { kind: 'point', tx: 22, ty: 25 }, facing: 'down' },
+  { id: 'merchant3',  sprite: 'mercen',     anchor: { kind: 'point', tx: 87, ty: 85 }, facing: 'down' },
+  { id: 'blacksmith1', sprite: 'bm',        anchor: { kind: 'point', tx: 47, ty: 20 }, facing: 'down' },
+  { id: 'blacksmith2', sprite: 'bm',        anchor: { kind: 'point', tx: 17, ty: 85 }, facing: 'down' },
+  { id: 'blacksmith3', sprite: 'bm',        anchor: { kind: 'point', tx: 107, ty: 45 }, facing: 'down' },
+  { id: 'tavernkeep1', sprite: 'barmaid',   anchor: { kind: 'point', tx: 17, ty: 55 }, facing: 'down' },
+  { id: 'tavernkeep2', sprite: 'barmaid',   anchor: { kind: 'point', tx: 87, ty: 25 }, facing: 'down' },
+  { id: 'tavernkeep3', sprite: 'barmaid',   anchor: { kind: 'point', tx: 37, ty: 85 }, facing: 'down' },
 ];
 
 const MONSTER_SPAWNS = [
