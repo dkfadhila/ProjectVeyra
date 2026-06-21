@@ -43,23 +43,20 @@ function pointRectDist(px, py, r) {
 }
 
 const BUILDING_SIZE = {
-  market:     [4, 4], inn_basic:  [4, 6],
-  inn:        [5, 7], inn_medium: [4, 4], inn_luxury: [5, 7], blacksmith: [3, 3], fisher_hut: [3, 3],
-  house1: [3, 4], house2: [3, 4], house3: [3, 3], house4: [3, 3],
-  house5: [3, 4], house6: [3, 4], house7: [3, 3], house8: [3, 3],
-  house9: [3, 4], house10: [3, 4],
+  inn:        [5, 7], inn_basic:  [4, 6],
+  inn_medium: [4, 4], inn_luxury: [5, 7],
   house_new1: [3, 4], house_new2: [3, 4], house_new3: [3, 4], house_new4: [3, 4],
 };
 
 const isHouse = (id) => /^house\d+|^house_new\d+$/.test(id);
 
 const TOWN_ROWS = [
-  { roadTileY: 60, startX: 20,  gap: 2, ids: ['market', 'inn_basic'] },
-  { roadTileY: 60, startX: 70,  gap: 2, ids: ['inn', 'inn_medium', 'blacksmith'] },
-  { roadTileY: 30, startX: 42,  gap: 2, ids: ['house1', 'house7', 'house_new1'] },
-  { roadTileY: 30, startX: 72,  gap: 2, ids: ['house2', 'house8', 'house_new2'] },
-  { roadTileY: 88, startX: 42,  gap: 2, ids: ['house4', 'house9', 'house_new3'] },
-  { roadTileY: 88, startX: 76,  gap: 2, ids: ['house10', 'house_new4'] },
+  { roadTileY: 60, startX: 28,  gap: 2, ids: ['inn_basic'] },
+  { roadTileY: 60, startX: 74,  gap: 2, ids: ['inn', 'inn_medium'] },
+  { roadTileY: 30, startX: 48,  gap: 2, ids: ['house_new1'] },
+  { roadTileY: 30, startX: 76,  gap: 2, ids: ['house_new2'] },
+  { roadTileY: 88, startX: 48,  gap: 2, ids: ['house_new3'] },
+  { roadTileY: 88, startX: 76,  gap: 2, ids: ['house_new4'] },
 ];
 
 const SOLO_BUILDINGS = [];
@@ -111,8 +108,6 @@ const NPC_PLACEMENTS = [
   { id: 'innkeeper_north',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_basic'  }, facing: 'down' },
   { id: 'innkeeper_north2', sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_medium' }, facing: 'down' },
   { id: 'innkeeper_south',  sprite: 'barmaid',    anchor: { kind: 'door',  building: 'inn_luxury' }, facing: 'down' },
-  { id: 'blacksmith', sprite: 'knight',     anchor: { kind: 'door',  building: 'blacksmith' }, facing: 'down' },
-  { id: 'merchant',   sprite: 'shopkeeper', anchor: { kind: 'door',  building: 'market'     }, facing: 'down' },
   { id: 'professor',  sprite: 'professor',  anchor: { kind: 'point', tx: PLAZA_CX + 4, ty: PLAZA_CY + 1 }, facing: 'left' },
   { id: 'lyra',       sprite: 'lyra',       anchor: { kind: 'point', tx: PLAZA_CX,     ty: PLAZA_CY + 4 }, facing: 'up' },
 ];

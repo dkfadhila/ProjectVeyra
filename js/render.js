@@ -42,9 +42,7 @@ export function loadImage(src) {
 
 
 const GROUND_KEYS = ['grass', 'path', 'water', 'sand', 'floor_wood', 'wall'];
-const BUILDING_KEYS = ['inn', 'market', 'house1', 'house2', 'house3', 'house4',
-  'blacksmith', 'inn_basic', 'inn_medium', 'inn_luxury',
-  'house5', 'house6', 'house7', 'house8', 'house9', 'house10',
+const BUILDING_KEYS = ['inn', 'inn_basic', 'inn_medium', 'inn_luxury',
   'house_new1', 'house_new2', 'house_new3', 'house_new4'];
 const TREE_KEYS = Array.from({ length: 11 }, (_, i) => `tree${i}`);
 const ROCK_KEYS = Array.from({ length: 6 }, (_, i) => `rock${i + 1}`);
