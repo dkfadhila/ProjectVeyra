@@ -73,7 +73,6 @@ function lazyLoad(bucket, key, path) {
 
 let _canvas = null;
 let _ctx = null;
-let _time = 0;
 
 export async function initRenderer(canvas) {
   _canvas = canvas;
@@ -581,25 +580,15 @@ function collectEntities(state) {
 }
 
 function drawBuilding(ctx, b, camX, camY) {
-  const key = b.sprite || b.type || b.id;
-  const img = IMAGES.buildings[key];
-  const isAnimated = img && img.width && img.width > img.height * 1.5;
-  const frames = isAnimated ? 4 : 1;
-  const fw = isAnimated ? img.width / frames : (img ? img.width : 0);
-  const fh = img && img.height ? img.height : 0;
-  const sw = isAnimated ? fw : (img && img.width ? img.width : (b.w || 96));
-  const sh = fh || (b.h || 96);
+  const img = IMAGES.buildings[b.sprite || b.type || b.id];
+  const sw = img && img.width ? img.width : (b.w || 96);
+  const sh = img && img.height ? img.height : (b.h || 96);
 
   const dx = b.x - camX + (b.w - sw) / 2;
   const dy = b.y - camY + (b.h - sh);
   drawShadow(ctx, b.x - camX + b.w / 2, b.y - camY + b.h - 4, sw * 0.6);
   if (img && img.width) {
-    if (isAnimated) {
-      const frame = Math.floor(_time / 400) % frames;
-      ctx.drawImage(img, frame * fw, 0, fw, fh, dx, dy, sw, sh);
-    } else {
-      ctx.drawImage(img, dx, dy, sw, sh);
-    }
+    ctx.drawImage(img, dx, dy, sw, sh);
   } else {
     ctx.fillStyle = '#6a4a30';
     ctx.fillRect(dx, dy, sw, sh);
@@ -737,7 +726,7 @@ function drawNpc(ctx, n, camX, camY, t) {
   const dy = n.y - camY - 48;
   drawShadow(ctx, n.x - camX, n.y - camY + 14, 44);
   if (img && img.width) {
-    if (img.width >= img.height * 3) {
+    if (img.width > img.height * 3) {
       drawMaidenNpc(ctx, img, dx, dy, t);
     } else if (img.width <= 48 && img.height <= 128) {
       drawTuxemonNpc(ctx, img, dx, dy, t);
@@ -938,7 +927,6 @@ export function renderFrame(state) {
   if (!_ctx) return;
   const ctx = _ctx;
   const t = (state && state.time) || performance.now();
-  _time = t;
 
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, _canvas.width, _canvas.height);
