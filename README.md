@@ -30,6 +30,6 @@ Lunaris Village is a peaceful small town surrounded by forests, rivers, and adve
 - **AI:** Lyra NPC  (MIMO)
 - **Storage:** 0G Storage (on-chain verification)
 
----
+----
 
 *Project Veyra is in active development.*
