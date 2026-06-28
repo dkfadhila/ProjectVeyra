@@ -18,7 +18,7 @@ Project Veyra is a multiplayer browser RPG where players explore the world of Lu
 - **Quest System** — Chained quests with progression and rewards
 - **Auto-save** — Progress saved automatically to server and localStorage
 
-## World
+## World.
 
 Lunaris Village is a peaceful small town surrounded by forests, rivers, and adventure zones. This is where travelers begin their journey.
 
